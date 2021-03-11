@@ -10,6 +10,7 @@
    Revisions: 2015, May 25:   Changed for new motor configuration. DLE
               2015, June 12:  Changed into B3_ code style for GoSciTech 2015. DLE
               2015, July 9: Name change, cleaned up and additional comments added. DLE
+              2015, July 10: Change default BACK motor port
 */
 #include <Wire.h>
 #include <Adafruit_MotorShield.h>
@@ -121,7 +122,7 @@ void loop(void) {
          We can use a trinary operator to set direction within run call
       */
       motorBack-> run((backPower  > 0) ? FORWARD : BACKWARD );
-      motorLeft-> run((leftPower  > 0) ? FORWARD : BACKWARD );
+      motorLeft-> run((leftPower  > 0) ? BACKWARD : FORWARD );
       motorRight->run((rightPower > 0) ? FORWARD : BACKWARD );
 
       //Print out motor control details

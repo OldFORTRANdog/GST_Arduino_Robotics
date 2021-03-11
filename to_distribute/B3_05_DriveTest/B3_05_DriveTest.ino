@@ -27,8 +27,8 @@
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
 // Define Pin Assignments
-const byte LEFT_BUMP_PIN = 9;    // Define DIGITAL Pins for left
-const byte RIGHT_BUMP_PIN = 8;   // and right bump sensors
+const byte LEFT_BUMP_PIN = 47;    // Define DIGITAL Pins for left
+const byte RIGHT_BUMP_PIN = 46;   // and right bump sensors
 // Define Constants
 #define TESTTIME 1000
 #define WAITTIME 1000

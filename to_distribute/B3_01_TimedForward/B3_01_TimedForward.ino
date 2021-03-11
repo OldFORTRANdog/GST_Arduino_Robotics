@@ -65,7 +65,7 @@ void loop(void){
      function allStop: */
 // allStop(FORWARD);
 
-  delay(2000);       // Pause for 2 seconds
+//  delay(2000);       // Pause for 2 seconds
   while (1) {};      // What does this do?
 }
 
