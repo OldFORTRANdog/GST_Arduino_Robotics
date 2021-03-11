@@ -34,7 +34,7 @@ const byte RIGHT_IR_PIN = A10;
 
 // Parameters controlling program behavior
 // Bump behavior
-const byte FORWARD_SPEED = 150;   // Define normal speeds
+const byte FORWARD_SPEED = 75;   // Define normal speeds
 const byte BACKWARD_SPEED = 100;  // and backup/turn speed
 const int  TURN_DURATION = 600;   // Turn length in milliseconds
 
@@ -100,6 +100,7 @@ void setup(void) {
   */
   int lightNum = 0;
   while (digitalRead(RIGHT_BUMP_PIN) == HIGH) {} // Pause until the pin is grounded (our switch)
+  delay(100);
   while (digitalRead(RIGHT_BUMP_PIN) == LOW) { // Get high light values until the pin
     // is no longer grounded
     leftIR = analogRead(LEFT_IR_PIN);
@@ -113,7 +114,12 @@ void setup(void) {
     if ( rightIR > maxRightIR ) {
       maxRightIR = rightIR;
     }
-
+    if ( leftIR < minLeftIR ) {
+      minLeftIR = leftIR;
+    }
+    if ( rightIR < minRightIR ) {
+      minRightIR = rightIR;
+    }
   }
 
   while (digitalRead(RIGHT_BUMP_PIN) == HIGH) {} // Pause until the pin is grounded (our switch)
