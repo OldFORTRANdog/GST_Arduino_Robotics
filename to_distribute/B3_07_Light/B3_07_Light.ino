@@ -24,15 +24,15 @@
 #include <Wire.h>
 #include <Adafruit_MotorShield.h>
 #include <math.h>
-#include <breadboardbot.h>
+#include <BreadBoardBot.h>
 
 // Create the motor shield object with the default I2C address
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
 // Define Constants
 
-const byte LEFT_PR_PIN = A15;    // Define light sensor pins for left
-const byte RIGHT_PR_PIN = A14;   // and right sides
+const byte LEFT_PR_PIN = A15; //A15   // Define light sensor pins for left
+const byte RIGHT_PR_PIN = A14;//A14   // and right sides
 const bool PHOTOTAXIS = true;    // GOes towards light (true) or away (false)
 const byte BASESPEED = 75;       // Base speed.  Light values will reduce this to turn
 const bool SIMPLE_LOGIC = false; // Use a simple or more complex approach

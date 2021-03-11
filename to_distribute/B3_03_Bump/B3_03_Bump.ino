@@ -2,7 +2,7 @@
 
    Drive the TWO-WHEELED Bread Board Bot (BBbot, B^3)
    forward.  When a whisker bump sensor on either side hits something,
-   back up and turn slightly away from that direction and resume 
+   back up and turn slightly away from that direction and resume
    forward path.
 
    Arduino: Arduino Mega 256 v3 Clone
@@ -10,18 +10,16 @@
    ---->  http://www.adafruit.com/products/1438
 
    Programmer: Dave Eslinger; June 12, 2015
-   Major revisions:  
-         July 3, 2015 DLE (renamed, changed motorshield pointer passing) 
+   Major revisions:
+         July 3, 2015 DLE (renamed, changed motorshield pointer passing)
 */
 #include <Wire.h>
-#include <Adafruit_MotorShield.h> 
-#include <math.h> 
-#include <breadboardbot.h>
+#include <Adafruit_MotorShield.h>
 
 // Create the motor shield object with the default I2C address
-Adafruit_MotorShield AFMS = Adafruit_MotorShield(); 
+Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
-// Define Pin Assignments
+// Define Bump Pin Assignments: CHANGE AS NEEDED DEPENDING ON HOW YOUR BUMP FEELERS POINT!
 const byte LEFT_BUMP_PIN = 47;    // Define DIGITAL Pins for left
 const byte RIGHT_BUMP_PIN = 46;   // and right bump sensors
 // Define Constants
@@ -37,38 +35,38 @@ Adafruit_DCMotor *motorLeft = AFMS.getMotor(LEFT_MOTOR_PORT);
 Adafruit_DCMotor *motorRight = AFMS.getMotor(RIGHT_MOTOR_PORT);
 
 
-void setup(void){
+void setup(void) {
   AFMS.begin();  // create with the default frequency 1.6KHz
   // Turn off all motors to start, just a good habit
   motorLeft->run(RELEASE);
   motorRight->run(RELEASE);
   Serial.begin(9600);  //Begin serial communcation
-  
+
   /*Set up Bump Pins with Arduino internal pullup resistors
-    This will make them always high unless a bump switch is hit, 
+    This will make them always high unless a bump switch is hit,
     which will make a connection to ground and they will read low. */
-  pinMode(LEFT_BUMP_PIN,INPUT_PULLUP);
-  pinMode(RIGHT_BUMP_PIN,INPUT_PULLUP);
+  pinMode(LEFT_BUMP_PIN, INPUT_PULLUP);
+  pinMode(RIGHT_BUMP_PIN, INPUT_PULLUP);
 
   delay(2000);  // Two second delay to get the robot ready
 }
 
-void loop(){
+void loop() {
   /*  Assuming no switches closed initially.  Drive forward: */
   motorLeft->setSpeed(FORWARD_SPEED);
-  motorRight->setSpeed(FORWARD_SPEED);  
-  while(digitalRead(LEFT_BUMP_PIN) == HIGH && 
-        digitalRead(RIGHT_BUMP_PIN) == HIGH) {
+  motorRight->setSpeed(FORWARD_SPEED);
+  while (digitalRead(LEFT_BUMP_PIN) == HIGH &&
+         digitalRead(RIGHT_BUMP_PIN) == HIGH) {
     motorLeft->run(FORWARD);
     motorRight->run(FORWARD);
   }
-  
+
   /* If you got here, one of the bump switches was closed */
 
   /* First check the LEFT sensor: */
-  if(digitalRead(LEFT_BUMP_PIN) != HIGH) { // the LEFT side switch was bumped
-    motorLeft->setSpeed(BACKWARD_SPEED/2); // Slowly back up and turn to right
-    motorRight->setSpeed(BACKWARD_SPEED);  
+  if (digitalRead(LEFT_BUMP_PIN) != HIGH) { // the LEFT side switch was bumped
+    motorLeft->setSpeed(BACKWARD_SPEED / 2); // Slowly back up and turn to right
+    motorRight->setSpeed(BACKWARD_SPEED);
     motorLeft->run(BACKWARD);
     motorRight->run(BACKWARD);
     delay(TURN_DURATION);                  // for specified duration
@@ -77,9 +75,9 @@ void loop(){
   }
 
   /* Then check the right sensor: */
-   if(digitalRead(RIGHT_BUMP_PIN) != HIGH) { // the RIGHT side switch was bumped
+  if (digitalRead(RIGHT_BUMP_PIN) != HIGH) { // the RIGHT side switch was bumped
     motorLeft->setSpeed(BACKWARD_SPEED); // Slowly back up and turn to left
-    motorRight->setSpeed(BACKWARD_SPEED/2);  
+    motorRight->setSpeed(BACKWARD_SPEED / 2);
     motorLeft->run(BACKWARD);
     motorRight->run(BACKWARD);
     delay(TURN_DURATION);                 // for specified duration
@@ -87,6 +85,6 @@ void loop(){
     motorRight->run(RELEASE);              // and move to next section of code
   }
 
-   /*That is all!  Now go back to the beginning of the loop and 
-     drive straight ahead until somehting is bumped. */
+  /*That is all!  Now go back to the beginning of the loop and
+    drive straight ahead until somehting is bumped. */
 }
