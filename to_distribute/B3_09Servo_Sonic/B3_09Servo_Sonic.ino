@@ -1,7 +1,5 @@
 /* B3_09_Servo_Sonic.ino
 
-  JUST FOR TESTING sonar.ping_median
-
    Drive the TWO-WHEELED Bread Board Bot (BBbot, B^3)
    forward.   When within TARGET_DISTANCE_INCHES inches of something,
    turn servos to find clearest path and then go that way.

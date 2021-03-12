@@ -11,6 +11,7 @@
               2015, June 12:  Changed into B3_ code style for GoSciTech 2015. DLE
               2015, July 9: Name change, cleaned up and additional comments added. DLE
               2015, July 10: Change default BACK motor port
+              2019, July 5: Added the bump sensors to start each run. DLE
 */
 #include <Wire.h>
 #include <Adafruit_MotorShield.h>
@@ -24,10 +25,14 @@ Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 const float cos30sin60 = sqrt(3.0) / 2.0; // cos(30 deg) = sin(60 deg), need for wheel
 // vector calcs.
 
+// IO Pins used
+const byte LEFT_BUMP_PIN = 47;    // Define DIGITAL Pins for left
+const byte RIGHT_BUMP_PIN = 46;   // and right bump sensors
+
 // Define 'ports' for motors.
 const byte LEFT_MOTOR_PORT = 3;
 const byte RIGHT_MOTOR_PORT = 1;
-const byte BACK_MOTOR_PORT = 4;
+const byte BACK_MOTOR_PORT = 2;
 // Create pointers to motor control objects
 Adafruit_DCMotor *motorLeft = AFMS.getMotor(LEFT_MOTOR_PORT);
 Adafruit_DCMotor *motorRight = AFMS.getMotor(RIGHT_MOTOR_PORT);
@@ -43,12 +48,23 @@ byte motorBackdir;
 byte motorRightdir;
 
 void setup(void) {
+  Serial.begin(9600);  //Begin serial communcation
   AFMS.begin();  // create with the default frequency 1.6KHz
   // Turn off all motors
   motorLeft->run(RELEASE);
   motorBack->run(RELEASE);
   motorRight->run(RELEASE);
+  /*Set up Bump Pins with Arduino internal pullup resistors
+    This will make them always high unless a bump switch is hit,
+    which will make a connection to ground and they will read low. */
+  pinMode(LEFT_BUMP_PIN, INPUT_PULLUP);
+  pinMode(RIGHT_BUMP_PIN, INPUT_PULLUP);
+// Now wait for the RIGHT bumpsensor to be pressed
+	while(digitalRead(RIGHT_BUMP_PIN)) {};
+	while(!digitalRead(RIGHT_BUMP_PIN)) {};
+	delay(600); // Bump pin triggered and released, just give 0.6 seconds to get hands out of the way.
 }
+
 void loop(void) {
   // Section for taking commands from Serial Input
   // N.B.  Need to comment out one bracket at end for the autonomous loop below
@@ -99,7 +115,7 @@ void loop(void) {
       Serial.println(yVector);
 
       // Find relative power needed for each wheel based on the target velocity vector
-      float backPower = -xVector;  // Multiply by fudge factor to prevent rotation if needed
+      float backPower = xVector;  // Multiply by fudge factor to prevent rotation if needed
       float leftPower = 0.5 * xVector - cos30sin60 * yVector;
       float rightPower = 0.5 * xVector + cos30sin60 * yVector;
 
@@ -150,6 +166,10 @@ void loop(void) {
       motorRight->setSpeed(0);
     }
   }
+  // Loop complete, so stop until LEFT bumper triggered and released, then rerun
+	while(digitalRead(LEFT_BUMP_PIN)) {};  // Wait until pushed
+	while(!digitalRead(LEFT_BUMP_PIN)) {}; // and released
+	delay (600);                           // and 0.6 seconds to get out of the way
 }
 /*
  SerialEvent occurs whenever a new data comes in the

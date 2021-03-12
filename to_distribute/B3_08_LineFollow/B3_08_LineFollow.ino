@@ -132,7 +132,7 @@ void loop() {
     rightSpeed = FORWARD_SPEED;
   }
   else if (leftIR < brightLeft ) {
-    leftSpeed = 20;       // Too far left, stop LEFT motor
+    leftSpeed = 20;       // Too far left, slow LEFT motor
     rightSpeed = FORWARD_SPEED;
   }
   else if (rightIR > darkRight) {

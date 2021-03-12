@@ -1,6 +1,6 @@
 /* RGB Common Cathode Demo Program
 	Dave Eslinger, 19 July, 2016
-	GoSciTech Ardino RObotics Course */
+	GoSciTech Ardino Robotics Course */
 	
 const byte RED_PIN = 7;
 const byte GREEN_PIN = 6;

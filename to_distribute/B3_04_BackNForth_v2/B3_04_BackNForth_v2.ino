@@ -1,4 +1,4 @@
-/* B3_04_BackNForwth_v2.ino
+/* B3_04_BackNForth_v2.ino
    Drive the TWO-WHEELED Bread Board Bot (BBbot, B^3)
    straight ahead for specified time and then stop
    and drive straight back for same time and then stop
