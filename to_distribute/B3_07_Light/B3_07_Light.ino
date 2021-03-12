@@ -33,7 +33,7 @@ Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
 const byte LEFT_PR_PIN = A15; //A15   // Define light sensor pins for left
 const byte RIGHT_PR_PIN = A14;//A14   // and right sides
-const bool PHOTOTAXIS = true;    // GOes towards light (true) or away (false)
+const bool PHOTOTAXIS = true;    // Goes towards light (true) or away (false)
 const byte BASESPEED = 75;       // Base speed.  Light values will reduce this to turn
 const bool SIMPLE_LOGIC = false; // Use a simple or more complex approach
 
@@ -82,7 +82,7 @@ void loop() {
     /* Find the direction of the strongest light by taking the difference
         between the readings */
     int deltaLight = abs(leftLight - rightLight);
-    deltaLight = constrain(deltaLight, 0, BASESPEED);  // Keep that limit between 0 and 50
+    deltaLight = constrain(deltaLight, 0, BASESPEED);  // Keep that limit between 0 and max speed
 
     byte leftSpeed = BASESPEED;
     byte rightSpeed = BASESPEED;

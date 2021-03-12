@@ -123,3 +123,13 @@ void pivot(float degrees, byte speed,
   delay(duration);
   return;
 }
+
+float Distance_inches(int ping) {
+  float inches_per_sec = 13582.67;  // Equivilent to 345 m/s
+  return ping * inches_per_sec * 1e-6 *0.5;
+}
+
+float Distance_cm(int ping) {
+  float cm_per_sec = 34500.;        // Equivilent to 345 m/s
+  return ping * cm_per_sec * 1e-6 *0.5;
+}

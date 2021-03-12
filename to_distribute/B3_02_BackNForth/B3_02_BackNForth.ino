@@ -72,8 +72,8 @@ void allStop(int direction) {
     motorRight->run(BACKWARD);
   }
   else {
-    motorLeft->run(BACKWARD);
-    motorRight->run(BACKWARD);
+    motorLeft->run(FORWARD);
+    motorRight->run(FORWARD);
   }
   delay(50);
   motorLeft->run(RELEASE);

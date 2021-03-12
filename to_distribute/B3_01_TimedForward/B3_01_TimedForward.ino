@@ -17,7 +17,6 @@
 */
 #include <Wire.h>
 #include <Adafruit_MotorShield.h> 
-#include <math.h>
 
 // Create the motor shield object with the default I2C address
 Adafruit_MotorShield AFMS = Adafruit_MotorShield(); 
@@ -40,9 +39,9 @@ void setup(void){
 }
 
 void loop(void){
-  // Drive forward for 1 second at X/255 (~60% power)
+  // Drive forward for 1 second at "speed"/255 (150 is ~60% power)
   int duration = 1000; // in milliseconds
-  byte speed = 255;
+  byte speed = TESTSPEED;
   motorLeft->setSpeed(speed);
   motorRight->setSpeed(speed);
   
@@ -54,12 +53,12 @@ void loop(void){
   motorLeft->run(RELEASE);   // Now stop the motors
   motorRight->run(RELEASE);  // However, this just coasts
 /* Here is a braking method: run backwards a bit */
-//  motorLeft->run(BACKWARD);  // Run backwards for a brief period
-//  motorRight->run(BACKWARD);
-//  delay(50);
-//
-//  motorLeft->run(RELEASE);     // and then stop the motors
-//  motorRight->run(RELEASE);   
+  motorLeft->run(BACKWARD);  // Run backwards for a brief period
+  motorRight->run(BACKWARD);
+  delay(50);
+
+  motorLeft->run(RELEASE);     // and then stop the motors
+  motorRight->run(RELEASE);   
 /* End of backwards section */
 /* Another way to do the same braking technique, but with a
      function allStop: */
@@ -77,8 +76,8 @@ void loop(void){
 //    motorRight->run(BACKWARD);
 //  }
 //  else {
-//    motorLeft->run(BACKWARD);
-//    motorRight->run(BACKWARD);
+//    motorLeft->run(FORWARD);
+//    motorRight->run(FORWARD);
 //  }
 //  delay(50);
 //  motorLeft->run(RELEASE);
