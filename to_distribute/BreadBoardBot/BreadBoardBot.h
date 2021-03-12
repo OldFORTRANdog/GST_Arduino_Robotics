@@ -23,14 +23,31 @@ const float trackWidth = 10.0; // inches      used everywhere for distance
 
 void allStop(int oldDirection, 
 	     Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight) {
-  mLeft->setSpeed(100);  // Note that we reset the speeds here; therefore, 
-  mRight->setSpeed(100); // we need to reset them in other routine.
+  mLeft->setSpeed(50);  // Note that we reset the speeds here; therefore, 
+  mRight->setSpeed(50); // we need to reset them in other routine.
   if (oldDirection == FORWARD) {
     mLeft->run(BACKWARD);
     mRight->run(BACKWARD);
   }
   else {
     mLeft->run(FORWARD);
+    mRight->run(FORWARD);
+  }
+  delay(50);
+  mLeft->run(RELEASE);
+  mRight->run(RELEASE);
+  return;
+}
+void spinStop(int angle, 
+	     Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight) {
+  mLeft->setSpeed(50);  // Note that we reset the speeds here; therefore, 
+  mRight->setSpeed(50); // we need to reset them in other routine.
+  if (angle > 0) {
+    mLeft->run(BACKWARD);
+    mRight->run(FORWARD);
+  }
+  else {
+    mLeft->run(BACKWARD);
     mRight->run(FORWARD);
   }
   delay(50);
@@ -122,14 +139,4 @@ void pivot(float degrees, byte speed,
   }
   delay(duration);
   return;
-}
-
-float Distance_inches(int ping) {
-  float inches_per_sec = 13582.67;  // Equivilent to 345 m/s
-  return ping * inches_per_sec * 1e-6 *0.5;
-}
-
-float Distance_cm(int ping) {
-  float cm_per_sec = 34500.;        // Equivilent to 345 m/s
-  return ping * cm_per_sec * 1e-6 *0.5;
 }
