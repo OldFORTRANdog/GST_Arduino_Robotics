@@ -12,14 +12,14 @@
 #include <Wire.h>
 #include <Adafruit_MotorShield.h> 
 #include <math.h> 
-#include <breadboardbot.h>
+#include <BreadBoardBot.h>
 
 // Create the motor shield object with the default I2C address
 Adafruit_MotorShield AFMS = Adafruit_MotorShield(); 
 
 // Define Constants
-const byte TESTSPEED = 155;
-const byte DIRECTION = TURNLEFT;
+const byte TESTSPEED = 100;
+const float SIDE = 12; // the length of 1 side of the square
 
 // Define 'ports' for motors.
 const byte LEFT_MOTOR_PORT = 3;
@@ -41,17 +41,17 @@ void loop(void){
 
   // Autonomous loop for driving in a square
   for ( byte leg = 1; leg <= 4; leg++ ) {
-    drive(10., TESTSPEED, motorLeft, motorRight);// Forward for 10 inches
+    drive(SIDE, TESTSPEED, motorLeft, motorRight);// Forward for 10 inches
     spin(-90., TESTSPEED, motorLeft, motorRight); // 90 deg. to left
     allStop(FORWARD, motorLeft, motorRight);
-    delay(500);  // Pause for 1/2 a second after turning
+    delay(5000);  // Pause for 1/2 a second after turning
   }
   delay(3000);
   for ( byte leg = 1; leg <= 4; leg++ ) {
-    drive(10., TESTSPEED, motorLeft, motorRight);// Forward for 10 inches
+    drive(SIDE, TESTSPEED, motorLeft, motorRight);// Forward for 10 inches
     spin(90., TESTSPEED, motorLeft, motorRight); // 90 deg. to left
     allStop(FORWARD, motorLeft, motorRight);
-    delay(500);  // Pause for 1/2 a second after turning
+    delay(5000);  // Pause for 1/2 a second after turning
   }
   while(1){}
 }

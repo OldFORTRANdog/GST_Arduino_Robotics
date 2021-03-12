@@ -3,16 +3,16 @@
   JUST FOR TESTING sonar.ping_median
 
    Drive the TWO-WHEELED Bread Board Bot (BBbot, B^3)
-   forward.   When within 10 inches of something, turn servos to find clearest path
-   and then go that way.
+   forward.   When within TARGET_DISTANCE_INCHES inches of something,
+   turn servos to find clearest path and then go that way.
    When a whisker bump sensor on either side hits something,
    back up and turn slightly away from that direction and resume
    forward path.
 
    Stop at a specified distance from an object directly ahead.
-   
+
    N.B.: When the pan servo is mounted with the control wire coming
-   out toward the back of the robot, then 180 in servo coordinates is 
+   out toward the back of the robot, then 180 in servo coordinates is
    all the way LEFT and 0 is all the way RIGHT.  The B^3 coordinates
    are from -90 all the way left to 90, all the way right.  We need to
    use a map() function to correct for this.
@@ -22,19 +22,22 @@
    ---->  http://www.adafruit.com/products/1438
 
    Programmer: Dave Eslinger; June 13, 2015
-   Revisions:   
+   Revisions:
 	June 23, 2016	Added sonic sensors on servos. DLE
-    June 21, 2018	Fixed coordinate issues with map() and 
+    June 21, 2018	Fixed coordinate issues with map() and
 		added sonic.ping_median calls. DLE
-				
+
 */
 #include <Wire.h>
 #include <Adafruit_MotorShield.h>
 #include <math.h>
 #include <BreadBoardBot.h>
 #include <NewPing.h>
+//#ifdef NO_ECHO
+//  #undef NO_ECHO
+//  #define NO_ECHO 10000               // Value returned if there's no ping echo within the specified MAX_SENSOR_DISTANCE or max_cm_distance. Default=0
+//#endif
 #include <Servo.h>
-#define NO_ECHO 10000               // Value returned if there's no ping echo within the specified MAX_SENSOR_DISTANCE or max_cm_distance. Default=0
 // Create the motor shield object with the default I2C address
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
@@ -57,7 +60,7 @@ const byte BACKWARD_SPEED = 100;  // and backup/turn speed
 const int  TURN_DURATION = 600;   // Turn length in milliseconds
 
 // Sonic sensor
-const float TARGET_DISTANCE_INCHES = 15;
+const float TARGET_DISTANCE_INCHES = 7;
 const int MAX_SONIC_DISTANCE = 500;      // cm, optional, 500 cm is default
 
 // Define 'ports' for motors.
@@ -105,7 +108,7 @@ void setup(void) {
 void loop() {
 
   // Test some of the sonic library functions:
- Serial.print(sonic.ping_in());
+  Serial.print(sonic.ping_in());
   Serial.print(" inches, cm = ");
   Serial.print(sonic.ping_cm());
   Serial.print(", ping time (ms) = ");
@@ -118,49 +121,23 @@ void loop() {
   Serial.print(Distance_cm(ping_milli));
   Serial.print(", med ping = ");
   Serial.println(sonic.ping_median(7));
-  // delay(100); // Just to slow things down
-
-     for (int i=0; i<=170; i+=5) {
-      tiltServo.write(i);
-      delay(50);
-    }
-    delay(1000);
-//    for (int i=170; i>=0; i-=5) {
-//      panServo.write(i);
-//      delay(50);
-//    }
-    delay(1000); 
-   tiltServo.write(180);
-   delay(2000);
- Serial.print("NO_ECHO = ");
- Serial.println(NO_ECHO);
- while(1) {}
-  // panServo.write(90);
-  // delay(500);
-  // panServo.write(0);
-  // delay(2000);
-  // panServo.write(90);
-  // delay(1000);
-
-  //Comment everything out just to test different ping approaches
+  Serial.print("NO_ECHO = ");
+  Serial.println(NO_ECHO);
 
   //   Assuming no switches closed initially.  Drive forward:
   motorLeft->setSpeed(FORWARD_SPEED);
   motorRight->setSpeed(FORWARD_SPEED);
-  // pingDist = Distance_inches(goodPing());
   pingDist = Distance_inches(sonic.ping_median());
   Serial.println("First straight distance = " + String(pingDist));
   while (digitalRead(LEFT_BUMP_PIN) && digitalRead(RIGHT_BUMP_PIN)
          && pingDist > TARGET_DISTANCE_INCHES) {
     motorLeft->run(FORWARD);
     motorRight->run(FORWARD);
-    // pingDist = Distance_inches(goodPing());
     pingDist = Distance_inches(sonic.ping_median());
     Serial.println("Straight distance = " + String(pingDist));
-    // Serial.println(String(pingDist));
   }
 
-  // If you got here, one of the bump switches was closed or B^3 is too
+  // If you got here, one of the bump switches was closed or B3 is too
   // close to something straight ahead
 
   // First check the LEFT sensor:
@@ -197,8 +174,6 @@ void loop() {
 
     for (int i = 5; i <= 175; i += 5) {
       panServo.write(i);
-      // pingDist = max(Distance_inches(sonic.ping()),0.1);
-      // pingDist = Distance_inches(goodPing());
       pingDist = Distance_inches(sonic.ping_median());
       if (pingDist > maxDist) {
         //newDirection = i - 90;
@@ -208,42 +183,29 @@ void loop() {
                                String(pingDist) + " at angle " + String(newDirection));
         Serial.println(outMsg);
       }
-      delay(20);
+//      delay(20);
     }
-    // delay(1000);
-    for (int i = 175; i >= 5; i -= 5) {
-      panServo.write(i);
-      // pingDist = max(Distance_inches(sonic.ping()),0.1);
-      // pingDist = Distance_inches(goodPing());
-      pingDist = Distance_inches(sonic.ping_median());
-      if (pingDist > maxDist) {
-        newDirection = map(i, 180, 0, -90, 90);
-        maxDist = pingDist;
-        String outMsg = String("New maximum distance is " +
-                               String(pingDist) + " at angle " + String(newDirection));
-        Serial.println(outMsg);
-      }
-      delay(20);
-    }
+//    for (int i = 175; i >= 5; i -= 5) {
+//      panServo.write(i);
+//      pingDist = Distance_inches(sonic.ping_median());
+//      if (pingDist > maxDist) {
+//        newDirection = map(i, 180, 0, -90, 90);
+//        maxDist = pingDist;
+//        String outMsg = String("New maximum distance is " +
+//                               String(pingDist) + " at angle " + String(newDirection));
+//        Serial.println(outMsg);
+//      }
+//      delay(20);
+//    }
     //	Now turn to the new maximumum direction!
     panServo.write(90);
     spin(newDirection, 75, motorLeft, motorRight);
+    spinStop(newDirection, motorLeft, motorRight); //Stops the spin
+    delay(50);
   }
 
   /*That is all!  Now go back to the beginning of the loop and
      drive straight ahead until somehting is bumped. */
-}
-
-int goodPing(void) {
-  int goodPing = 0;
-  int minBadPing = 0;
-  int maxBadPing = 4.e6 * 2.0 / 13582.67; // uSecs to go and return 4 inches.
-  goodPing = sonic.ping();
-  while (goodPing < 5) {
- // while (goodPing >= minBadPing && goodPing <= maxBadPing) {
-    goodPing = sonic.ping();
-  }
-  return goodPing;
 }
 
 float Distance_inches(int ping) {

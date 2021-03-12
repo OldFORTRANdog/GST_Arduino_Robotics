@@ -18,6 +18,9 @@
   
   modified 8 Sep 2016
   by Colby Newman
+
+  modified 12 Mar 2021
+  by Dave Eslinger
 */
 
 
@@ -30,6 +33,7 @@ void setup() {
 
 // the loop function runs over and over again forever
 void loop() {
+  int DelayTime = 1000;
   int DelayTime =  random(10, 1000);
   digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
   delay(DelayTime);                       // wait for a second
