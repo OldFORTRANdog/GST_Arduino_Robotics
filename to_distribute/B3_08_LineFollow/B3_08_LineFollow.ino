@@ -136,8 +136,8 @@ void loop() {
     rightSpeed = FORWARD_SPEED;
   }
   else if (rightIR > darkRight) {
-    leftSpeed = 20;
-    rightSpeed = FORWARD_SPEED;
+    rightSpeed = 20;
+    leftSpeed = FORWARD_SPEED;
 
   }
   motorLeft -> setSpeed(leftSpeed);

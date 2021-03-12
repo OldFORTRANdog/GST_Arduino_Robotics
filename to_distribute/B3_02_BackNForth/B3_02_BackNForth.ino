@@ -1,4 +1,4 @@
-/* B3_02_BackNForth.ino
+/* B3_02_BackNForwth.ino
    Drive the TWO-WHEELED Bread Board Bot (BBbot, B^3)
    straight ahead for specified time and then stop
    and drive straight back for same time and then stop
@@ -80,3 +80,4 @@ void allStop(int direction) {
   motorRight->run(RELEASE);
   return;
 }
+

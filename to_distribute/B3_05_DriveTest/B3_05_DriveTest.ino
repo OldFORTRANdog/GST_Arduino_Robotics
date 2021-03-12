@@ -21,7 +21,7 @@
 #include <Wire.h>
 #include <Adafruit_MotorShield.h>
 #include <math.h>
-#include <breadboardbot.h>
+#include <BreadBoardBot.h>
 
 // Create the motor shield object with the default I2C address
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
