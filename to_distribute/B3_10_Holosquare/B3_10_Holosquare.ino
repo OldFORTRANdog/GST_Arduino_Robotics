@@ -59,10 +59,10 @@ void setup(void) {
     which will make a connection to ground and they will read low. */
   pinMode(LEFT_BUMP_PIN, INPUT_PULLUP);
   pinMode(RIGHT_BUMP_PIN, INPUT_PULLUP);
-// Now wait for the RIGHT bumpsensor to be pressed
-	while(digitalRead(RIGHT_BUMP_PIN)) {};
-	while(!digitalRead(RIGHT_BUMP_PIN)) {};
-	delay(600); // Bump pin triggered and released, just give 0.6 seconds to get hands out of the way.
+  // Now wait for the RIGHT bumpsensor to be pressed
+  while (digitalRead(RIGHT_BUMP_PIN)) {};
+  while (!digitalRead(RIGHT_BUMP_PIN)) {};
+  delay(600); // Bump pin triggered and released, just give 0.6 seconds to get hands out of the way.
 }
 
 void loop(void) {
@@ -167,26 +167,7 @@ void loop(void) {
     }
   }
   // Loop complete, so stop until LEFT bumper triggered and released, then rerun
-	while(digitalRead(LEFT_BUMP_PIN)) {};  // Wait until pushed
-	while(!digitalRead(LEFT_BUMP_PIN)) {}; // and released
-	delay (600);                           // and 0.6 seconds to get out of the way
+  while (digitalRead(LEFT_BUMP_PIN)) {}; // Wait until pushed
+  while (!digitalRead(LEFT_BUMP_PIN)) {}; // and released
+  delay (600);                           // and 0.6 seconds to get out of the way
 }
-/*
- SerialEvent occurs whenever a new data comes in the
- hardware serial RX.  This routine is run between each
- time loop() runs, so using delay inside loop can delay
- response.  Multiple bytes of data may be available.
- */
-/* void serialEvent() { */
-/*   while (Serial.available()) { */
-/*     // get the new byte: */
-/*     char inChar = (char)Serial.read();  */
-/*     // add it to the inputString: */
-/*     inputString += inChar; */
-/*     // if the incoming character is a neleftPowerine, set a flag */
-/*     // so the main loop can do something about it: */
-/*     if (inChar == '\n') { */
-/*       stringComplete = true; */
-/*     }  */
-/*   } */
-/* } */

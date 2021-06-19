@@ -1,18 +1,18 @@
 /* B3_10_HoloSquare.ino
-This is a test sketch for autonomous driving mode of
-the three-wheeled drive Bread Board Bot (BBbot, B^3)
+  This is a test sketch for autonomous driving mode of
+  the three-wheeled drive Bread Board Bot (BBbot, B^3)
 
-Arduino: Arduino Mega 256 v3 Clone
-Motor Shield: Adafruit assembled Motor Shield for Arduino v2
----->  http://www.adafruit.com/products/1438
+  Arduino: Arduino Mega 256 v3 Clone
+  Motor Shield: Adafruit assembled Motor Shield for Arduino v2
+  ---->  http://www.adafruit.com/products/1438
 
-Programmer: Dave Eslinger; December 2, 2014
-Revisions: 2015, May 25:   Changed for new motor configuration. DLE
+  Programmer: Dave Eslinger; December 2, 2014
+  Revisions: 2015, May 25:   Changed for new motor configuration. DLE
 			2015, June 12:  Changed into B3_ code style for GoSciTech 2015. DLE
 			2015, July 9: Name change, cleaned up and additional comments added. DLE
 			2015, July 10: Change default BACK motor port
 			2019, July 5: Added the bump sensors to start each run. Also modified to
-			 	use the new calls in BreadMoardBot.h library and saved as v2. DLE
+			 	use the new calls in BreadBoardBot.h library and saved as v2. DLE
 */
 #include <Wire.h>
 #include <Adafruit_MotorShield.h>
@@ -46,135 +46,134 @@ byte motorBackdir;
 byte motorRightdir;
 
 void setup(void) {
-	Serial.begin(9600);  //Begin serial communcation
-	AFMS.begin();  // create with the default frequency 1.6KHz
-	// Turn off all motors
-	motorLeft->run(RELEASE);
-	motorBack->run(RELEASE);
-	motorRight->run(RELEASE);
-	/*Set up Bump Pins with Arduino internal pullup resistors
+  Serial.begin(9600);  //Begin serial communcation
+  AFMS.begin();  // create with the default frequency 1.6KHz
+  // Turn off all motors
+  motorLeft->run(RELEASE);
+  motorBack->run(RELEASE);
+  motorRight->run(RELEASE);
+  /*Set up Bump Pins with Arduino internal pullup resistors
     This will make them always high unless a bump switch is hit,
     which will make a connection to ground and they will read low. */
   pinMode(LEFT_BUMP_PIN, INPUT_PULLUP);
   pinMode(RIGHT_BUMP_PIN, INPUT_PULLUP);
-// Now wait for the RIGHT bumpsensor to be pressed
-	while(digitalRead(RIGHT_BUMP_PIN)) {};
-	while(digitalRead(RIGHT_BUMP_PIN)!= HIGH) {};
-	delay(600); // Bump pin triggered and released, just give 0.2 seconds to get hands out of the way.
-	Serial.println("Beginning");
+  // Now wait for the RIGHT bumpsensor to be pressed
+  while (digitalRead(RIGHT_BUMP_PIN)) {};
+  while (!digitalRead(RIGHT_BUMP_PIN)) {};
+  delay(600); // Bump pin triggered and released, just give 0.6 seconds to get hands out of the way.
+  Serial.println("Beginning");
 }
 void loop(void) {
-	// Section for taking commands from Serial Input
-	// N.B.  Need to comment out one bracket at end for the autonomous loop below
-	/* if (Serial.available() > 0) { */
-	/*   direction = Serial.parseInt(); */
-	/*   magnitude = Serial.parseInt(); */
-	/*   duration = Serial.parseInt(); */
-	/* }  */
+  // Section for taking commands from Serial Input
+  // N.B.  Need to comment out one bracket at end for the autonomous loop below
+  /* if (Serial.available() > 0) { */
+  /*   direction = Serial.parseInt(); */
+  /*   magnitude = Serial.parseInt(); */
+  /*   duration = Serial.parseInt(); */
+  /* }  */
 
-	/* Autonomous loop for driving in a square */
-	for ( byte leg = 1; leg < 6; leg++ ) {   // 5 times through loop for a square, why?
-		duration = 1000;                          // Constants per leg: Two seconds/leg
-		magnitude = 150;                        //                    50% max power
-		bool brake = false;                    //                    No braking
-		switch (leg) {
-		case 1: // Move forward
-			Serial.println("Forward");
-			direction = 0.;
-			break;
-		case 2: // Move right
-		Serial.println("Right");
-			direction = 90.;
-			break;
-		case 3: // Move backward
-		Serial.println("Back");
-			direction = 180.;
-			break;
-		case 4: // Move left
-		Serial.println("Left");
-			direction = -90.;
-			break;
-		default: // Stop and pause for 4 seconds at starting point
-		Serial.println("Stop for 4 seconds");
-			magnitude = 0;
-			duration = 4;
-			direction = 0;
-			brake = true; // hard stop
-		}
-		odrive(direction, magnitude, duration, brake,
-		motorLeft, motorRight, motorBack);
+  /* Autonomous loop for driving in a square */
+  for ( byte leg = 1; leg < 6; leg++ ) {   // 5 times through loop for a square, why?
+    duration = 1000;                          // Constants per leg: Two seconds/leg
+    magnitude = 150;                        //                    50% max power
+    bool brake = false;                    //                    No braking
+    switch (leg) {
+      case 1: // Move forward
+        Serial.println("Forward");
+        direction = 0.;
+        break;
+      case 2: // Move right
+        Serial.println("Right");
+        direction = 90.;
+        break;
+      case 3: // Move backward
+        Serial.println("Back");
+        direction = 180.;
+        break;
+      case 4: // Move left
+        Serial.println("Left");
+        direction = -90.;
+        break;
+      default: // Stop and pause for 4 seconds at starting point
+        Serial.println("Stop for 4 seconds");
+        magnitude = 0;
+        duration = 4;
+        direction = 0;
+        brake = true; // hard stop
+    }
+    odrive(direction, magnitude, duration, brake,
+           motorLeft, motorRight, motorBack);
 
-		/*     if ( duration > 0 ) {
-	Serial.print("direction = ");
-	Serial.print(direction);
-	Serial.print(", magnitude = ");
-	Serial.print(magnitude);
-	Serial.print(" and duration = ");
-	Serial.println(duration);
+    /*     if ( duration > 0 ) {
+      Serial.print("direction = ");
+      Serial.print(direction);
+      Serial.print(", magnitude = ");
+      Serial.print(magnitude);
+      Serial.print(" and duration = ");
+      Serial.println(duration);
 
-	float xVector = magnitude * sin((M_PI * direction) / 180.);
-	float yVector = magnitude * cos((M_PI * direction) / 180.);
-	Serial.print("xVector, yVector = ");
-	Serial.print(xVector);
-	Serial.print(", ");
-	Serial.println(yVector);
+      float xVector = magnitude * sin((M_PI * direction) / 180.);
+      float yVector = magnitude * cos((M_PI * direction) / 180.);
+      Serial.print("xVector, yVector = ");
+      Serial.print(xVector);
+      Serial.print(", ");
+      Serial.println(yVector);
 
-	// Find relative power needed for each wheel based on the target velocity vector
-	float backPower = -xVector;  // Multiply by fudge factor to prevent rotation if needed
-	float leftPower = 0.5 * xVector - cos30sin60 * yVector;
-	float rightPower = 0.5 * xVector + cos30sin60 * yVector;
+      // Find relative power needed for each wheel based on the target velocity vector
+      float backPower = -xVector;  // Multiply by fudge factor to prevent rotation if needed
+      float leftPower = 0.5 * xVector - cos30sin60 * yVector;
+      float rightPower = 0.5 * xVector + cos30sin60 * yVector;
 
-	// Find the actual motor speeds, 0-255, needed.  N.B. still need motor direction!
-	byte backSpeed  = map(abs(backPower),  0, 100, 0, 255);
-	byte leftSpeed  = map(abs(leftPower),  0, 100, 0, 255);
-	byte rightSpeed = map(abs(rightPower), 0, 100, 0, 255);
+      // Find the actual motor speeds, 0-255, needed.  N.B. still need motor direction!
+      byte backSpeed  = map(abs(backPower),  0, 100, 0, 255);
+      byte leftSpeed  = map(abs(leftPower),  0, 100, 0, 255);
+      byte rightSpeed = map(abs(rightPower), 0, 100, 0, 255);
 
-	// Set the speeds
-	motorBack-> setSpeed(backSpeed);
-	motorLeft-> setSpeed(leftSpeed);
-	motorRight->setSpeed(rightSpeed);
-*/
-		/* Set Motor directions.  For Adafruit V2 Motorshield:
-		1 is Clockwise (Positive motor direction, FORWARD)
-		2 is Counterclockwise (Negative vector direction, BACKWARD)
-		3 is Brake (Doesn't work at present)
-		4 is Release = stop power, not driving, but not brake
+      // Set the speeds
+      motorBack-> setSpeed(backSpeed);
+      motorLeft-> setSpeed(leftSpeed);
+      motorRight->setSpeed(rightSpeed);
+    */
+    /* Set Motor directions.  For Adafruit V2 Motorshield:
+      1 is Clockwise (Positive motor direction, FORWARD)
+      2 is Counterclockwise (Negative vector direction, BACKWARD)
+      3 is Brake (Doesn't work at present)
+      4 is Release = stop power, not driving, but not brake
 
-		We can use a trinary operator to set direction within run call
-	*/
-		/*     motorBack-> run((backPower  > 0) ? FORWARD : BACKWARD );
-	motorLeft-> run((leftPower  > 0) ? BACKWARD : FORWARD );
-	motorRight->run((rightPower > 0) ? FORWARD : BACKWARD );
+      We can use a trinary operator to set direction within run call
+    */
+    /*     motorBack-> run((backPower  > 0) ? FORWARD : BACKWARD );
+      motorLeft-> run((leftPower  > 0) ? BACKWARD : FORWARD );
+      motorRight->run((rightPower > 0) ? FORWARD : BACKWARD );
 
-	// Print out motor control details
-	Serial.print("Speeds Back,Left,Right = ");
-	Serial.print(copysign(backPower, backSpeed));
-	Serial.print(", ");
-	Serial.print(copysign(leftPower, leftSpeed));
-	Serial.print(", ");
-	Serial.println(copysign(rightPower, rightSpeed));
+      // Print out motor control details
+      Serial.print("Speeds Back,Left,Right = ");
+      Serial.print(copysign(backPower, backSpeed));
+      Serial.print(", ");
+      Serial.print(copysign(leftPower, leftSpeed));
+      Serial.print(", ");
+      Serial.println(copysign(rightPower, rightSpeed));
 
-	// Run motors for the duration needed, converting from seconds to milliseconds
-	delay(1000 * duration);
-	if (brake) {            // Not a real brake, but set power = 0, stop driving motors
-		motorBack->setSpeed(0);
-		motorLeft->setSpeed(0);
-		motorRight->setSpeed(0);
-		motorBack-> run(RELEASE);
-		motorLeft-> run(RELEASE);
-		motorRight->run(RELEASE);
-	}
-	}
-	else {                    // no duration entered, so stop all motors
-	motorBack->setSpeed(0);
-	motorLeft->setSpeed(0);
-	motorRight->setSpeed(0);
-	}
-*/
-	}
-	// Loop complete, so stop until LEFT bumper triggered and released, then rerun
-	while(digitalRead(LEFT_BUMP_PIN)) {};  // Wait until pushed
-	while(!digitalRead(LEFT_BUMP_PIN)) {}; // and released
-	delay (600);                           // and 0.2 seconds to get out of the way
-
+      // Run motors for the duration needed, converting from seconds to milliseconds
+      delay(1000 * duration);
+      if (brake) {            // Not a real brake, but set power = 0, stop driving motors
+      motorBack->setSpeed(0);
+      motorLeft->setSpeed(0);
+      motorRight->setSpeed(0);
+      motorBack-> run(RELEASE);
+      motorLeft-> run(RELEASE);
+      motorRight->run(RELEASE);
+      }
+      }
+      else {                    // no duration entered, so stop all motors
+      motorBack->setSpeed(0);
+      motorLeft->setSpeed(0);
+      motorRight->setSpeed(0);
+      }
+    */
+  }
+  // Loop complete, so stop until LEFT bumper triggered and released, then rerun
+  while (digitalRead(LEFT_BUMP_PIN)) {}; // Wait until pushed
+  while (!digitalRead(LEFT_BUMP_PIN)) {}; // and released
+  delay (600);                           // and 0.6 seconds to get out of the way
 }
