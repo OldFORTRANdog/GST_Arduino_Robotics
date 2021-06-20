@@ -1,8 +1,9 @@
+
 /* B3_09_Servo_center.ino
 
    Simply centers both the pan and the tilt servo at 90 degrees.
    This is used to help install them correctly.
-   
+
    N.B.: When the pan servo is mounted with the control wire coming
    out toward the back of the robot, then 180 in servo coordinates is
    all the way LEFT and 0 is all the way RIGHT.  The B^3 coordinates
@@ -39,6 +40,29 @@ void setup(void) {
   tiltServo.attach(TILTSERVOPIN);
   panServo.write(90);
   tiltServo.write(90);
+  delay(1000);
 }
 
-void loop() {}
+void loop() {
+  panServo.write(45);
+  delay(200);
+  for (int i = 50; i <= 135.; i += 5) {
+    panServo.write(i);
+    delay(200);
+  }
+
+  panServo.write(90);
+  delay(500);
+
+  tiltServo.write(45);
+  delay(200);
+  for (int i = 50; i <= 135.; i += 5) {
+    tiltServo.write(i);
+    delay(200);
+  }
+
+  panServo.write(90);
+  tiltServo.write(90);
+  while (1) {};
+
+}
