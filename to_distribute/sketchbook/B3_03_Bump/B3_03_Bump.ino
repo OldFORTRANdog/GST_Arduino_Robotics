@@ -86,5 +86,5 @@ void loop() {
   }
 
   /*That is all!  Now go back to the beginning of the loop and
-    drive straight ahead until somehting is bumped. */
+    drive straight ahead until something is bumped. */
 }

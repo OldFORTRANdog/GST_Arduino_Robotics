@@ -1,6 +1,7 @@
 /* B3_10_HoloSquare.ino
-   This is a test sketch for autonomous driving mode of
-   the three-wheeled drive Bread Board Bot (BBbot, B^3)
+   Drive in a square with the robot facing forward the entire time.
+   This is a test sketch for holonomic driving mode of
+   the three-wheeled drive Bread Board Bot (BBbot, B^3).
 
    Arduino: Arduino Mega 256 v3 Clone
    Motor Shield: Adafruit assembled Motor Shield for Arduino v2
@@ -13,9 +14,8 @@
               2015, July 10: Change default BACK motor port
               2019, July 5: Added the bump sensors to start each run. DLE
 */
-#include <Wire.h>
 #include <Adafruit_MotorShield.h>
-#include <math.h>
+#include <math.h>                  // New library for Trig functions
 #include <BreadBoardBot.h>
 
 // Create the motor shield object with the default I2C address
@@ -68,11 +68,6 @@ void setup(void) {
 void loop(void) {
   // Section for taking commands from Serial Input
   // N.B.  Need to comment out one bracket at end for the autonomous loop below
-  /* if (Serial.available() > 0) { */
-  /*   direction = Serial.parseInt(); */
-  /*   magnitude = Serial.parseInt(); */
-  /*   duration = Serial.parseInt(); */
-  /* }  */
 
   /* Autonomous loop for driving in a square */
   for ( byte leg = 1; leg < 6; leg++ ) {   // 5 times through loop for a square, why?

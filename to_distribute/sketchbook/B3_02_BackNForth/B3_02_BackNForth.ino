@@ -12,7 +12,6 @@
    Major revisions: 
          July 3, 2015 DLE: Renamed & changed motorshield pointer passing
 */
-#include <Wire.h>
 #include <Adafruit_MotorShield.h> 
 
 // Create the motor shield object with the default I2C address
@@ -80,4 +79,3 @@ void allStop(int direction) {
   motorRight->run(RELEASE);
   return;
 }
-

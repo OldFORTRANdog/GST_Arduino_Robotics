@@ -4,6 +4,8 @@
    and drive straight back for same time and then stop
    with a short reverse brake on the motors. 
 
+   V2 uses a custom BreadBoardBot library for additional functions.
+
    Arduino: Arduino Mega 256 v3 Clone
    Motor Shield: Adafruit assembled Motor Shield for Arduino v2
    ---->  http://www.adafruit.com/products/1438
@@ -57,7 +59,7 @@ void loop(void){
   motorRight->run(BACKWARD);
   delay(1000);
   
-  allStop(BACKWARD, motorLeft, motorRight); // This is in our include file!
+  allStop(BACKWARD, motorLeft, motorRight); // This function is now in our include file!
 
   while (1);                // What does this do?
 }

@@ -26,16 +26,12 @@
 		added sonic.ping_median calls. DLE
 
 */
-#include <Wire.h>
 #include <Adafruit_MotorShield.h>
-#include <math.h>
 #include <BreadBoardBot.h>
-#include <NewPing.h>
-//#ifdef NO_ECHO
-//  #undef NO_ECHO
-//  #define NO_ECHO 10000               // Value returned if there's no ping echo within the specified MAX_SENSOR_DISTANCE or max_cm_distance. Default=0
-//#endif
 #include <Servo.h>
+#include <NewPing.h>  // Another new library, this one to use the sonic sensor
+
+
 // Create the motor shield object with the default I2C address
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 

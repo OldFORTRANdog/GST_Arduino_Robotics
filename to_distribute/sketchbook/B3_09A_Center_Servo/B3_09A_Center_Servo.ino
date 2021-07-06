@@ -16,11 +16,10 @@
 
    Programmer: Dave Eslinger; June 19, 2021
 */
-#include <Wire.h>
 #include <Adafruit_MotorShield.h>
-#include <math.h>
 #include <BreadBoardBot.h>
-#include <Servo.h>
+#include <Servo.h>            // New library to talk to servos
+
 // Create the motor shield object with the default I2C address
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 

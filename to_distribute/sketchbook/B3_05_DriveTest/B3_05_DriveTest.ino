@@ -18,9 +18,7 @@
          7/3/2015 DLE: renamed, changed motorshield pointer passing)
          7/6/2015 DLE: Changed to use bump switches for running
 */
-#include <Wire.h>
 #include <Adafruit_MotorShield.h>
-#include <math.h>
 #include <BreadBoardBot.h>
 
 // Create the motor shield object with the default I2C address

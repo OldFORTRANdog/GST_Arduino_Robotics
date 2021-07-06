@@ -11,9 +11,7 @@
    Programmer: Dave Eslinger; June 13, 2015
    Revisions:
 */
-#include <Wire.h>
 #include <Adafruit_MotorShield.h>
-#include <math.h>
 #include <BreadBoardBot.h>
 
 // Create the motor shield object with the default I2C address
