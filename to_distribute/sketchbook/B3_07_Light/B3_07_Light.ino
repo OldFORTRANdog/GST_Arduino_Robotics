@@ -49,6 +49,11 @@ void setup(void) {
   motorLeft->run(RELEASE);
   motorRight->run(RELEASE);
   Serial.begin(9600);  //Begin serial communcation
+
+  // Now wait for the RIGHT bumpsensor to be pressed
+  while (digitalRead(RIGHT_BUMP_PIN)) {};
+  while (!digitalRead(RIGHT_BUMP_PIN)) {};
+  delay(600); // Bump pin triggered and released, just give 0.6 seconds to get hands out of the way.
 }
 
 void loop() {

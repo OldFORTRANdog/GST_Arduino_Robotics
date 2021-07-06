@@ -96,7 +96,11 @@ void setup(void) {
 
   pinMode(SONIC_TRIGGER_PIN, OUTPUT);
   pinMode(SONIC_ECHO_PIN, INPUT);
-  delay(2000);  // Two second delay to get the robot placed
+
+  // Now wait for the RIGHT bumpsensor to be pressed
+  while (digitalRead(RIGHT_BUMP_PIN)) {};
+  while (!digitalRead(RIGHT_BUMP_PIN)) {};
+  delay(600); // Bump pin triggered and released, just give 0.6 seconds to get hands out of the way.
 }
 
 void loop() {
@@ -177,20 +181,8 @@ void loop() {
                                String(pingDist) + " at angle " + String(newDirection));
         Serial.println(outMsg);
       }
-//      delay(20);
     }
-//    for (int i = 175; i >= 5; i -= 5) {
-//      panServo.write(i);
-//      pingDist = Distance_inches(sonic.ping_median());
-//      if (pingDist > maxDist) {
-//        newDirection = map(i, 180, 0, -90, 90);
-//        maxDist = pingDist;
-//        String outMsg = String("New maximum distance is " +
-//                               String(pingDist) + " at angle " + String(newDirection));
-//        Serial.println(outMsg);
-//      }
-//      delay(20);
-//    }
+
     //	Now turn to the new maximumum direction!
     panServo.write(90);
     spin(newDirection, 75, motorLeft, motorRight);
