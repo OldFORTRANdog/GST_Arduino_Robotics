@@ -15,6 +15,7 @@
    ---->  http://www.adafruit.com/products/1438
 
    Programmer: Dave Eslinger; June 19, 2021
+   edited: June 2022, DLE
 */
 #include <Adafruit_MotorShield.h>
 #include <BreadBoardBot.h>
@@ -31,14 +32,14 @@ Servo tiltServo;
 
 /* Define servo pins */
 const byte PANSERVOPIN = 10; // Servo 1 on AdaFruit Motor Shield
-const byte TILTSERVOPIN = 9; // Servo 2
+//const byte TILTSERVOPIN = 9; // Servo 2
 
 void setup(void) {
 
   panServo.attach(PANSERVOPIN);
-  tiltServo.attach(TILTSERVOPIN);
+//  tiltServo.attach(TILTSERVOPIN);
   panServo.write(90);
-  tiltServo.write(90);
+//  tiltServo.write(90);
   delay(1000);
 }
 
@@ -53,15 +54,15 @@ void loop() {
   panServo.write(90);
   delay(500);
 
-  tiltServo.write(45);
-  delay(200);
-  for (int i = 50; i <= 135.; i += 5) {
-    tiltServo.write(i);
-    delay(200);
-  }
+//  tiltServo.write(45);
+//  delay(200);
+//  for (int i = 50; i <= 135.; i += 5) {
+//    tiltServo.write(i);
+//    delay(200);
+//  }
 
   panServo.write(90);
-  tiltServo.write(90);
+//  tiltServo.write(90);
   while (1) {};
 
 }

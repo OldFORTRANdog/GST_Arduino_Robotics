@@ -21,9 +21,10 @@
 
    Programmer: Dave Eslinger; June 13, 2015
    Revisions:
-	June 23, 2016	Added sonic sensors on servos. DLE
+	  June 23, 2016	Added sonic sensors on servos. DLE
     June 21, 2018	Fixed coordinate issues with map() and
 		added sonic.ping_median calls. DLE
+    June 19, 2022 Coomented out Tilt Servo entries.  New build only uses Pan servo.
 
 */
 #include <Adafruit_MotorShield.h>
@@ -37,7 +38,7 @@ Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
 // Define Servos
 Servo panServo;
-Servo tiltServo;
+//Servo tiltServo;
 
 /* Define Constants */
 
@@ -70,7 +71,7 @@ NewPing sonic(SONIC_TRIGGER_PIN, SONIC_ECHO_PIN, MAX_SONIC_DISTANCE);
 
 /* Define servo pins */
 const byte PANSERVOPIN = 10; // Servo 1 on AdaFruit Motor Shield
-const byte TILTSERVOPIN = 9; // Servo 2
+//const byte TILTSERVOPIN = 9; // Servo 2
 
 float pingDist; // define variable to use for distance measurements
 
@@ -82,9 +83,9 @@ void setup(void) {
   motorRight->run(RELEASE);
 
   panServo.attach(PANSERVOPIN);
-  tiltServo.attach(TILTSERVOPIN);
+//  tiltServo.attach(TILTSERVOPIN);
   panServo.write(90);
-  tiltServo.write(90);
+//  tiltServo.write(90);
 
   Serial.begin(9600);  //Begin serial communcation
 
