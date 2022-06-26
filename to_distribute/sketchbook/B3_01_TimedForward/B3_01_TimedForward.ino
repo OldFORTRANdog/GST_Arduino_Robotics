@@ -50,8 +50,9 @@ void loop(void){
   
   delay(duration);
   
-//  motorLeft->run(RELEASE);   // Now stop the motors
-//  motorRight->run(RELEASE);  // However, this just coasts
+ motorLeft->run(RELEASE);   // Now stop the motors
+ motorRight->run(RELEASE);  // However, this just coasts
+
 /* Here is a braking method: run backwards a bit */
 //  motorLeft->run(BACKWARD);  // Run backwards for a brief period
 //  motorRight->run(BACKWARD);
@@ -60,9 +61,10 @@ void loop(void){
 //  motorLeft->run(RELEASE);     // and then stop the motors
 //  motorRight->run(RELEASE);   
 /* End of backwards section */
+
 /* Another way to do the same braking technique, but with a
      function allStop: */
- allStop(FORWARD);
+//  allStop(FORWARD);
 
 //  delay(2000);       // Pause for 2 seconds
   while (1) {};      // What does this do?

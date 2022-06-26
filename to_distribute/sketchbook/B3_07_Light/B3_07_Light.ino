@@ -34,6 +34,9 @@ const byte RIGHT_PR_PIN = A14;//A14   // and right sides
 const bool PHOTOTAXIS = true;    // Goes towards light (true) or away (false)
 const byte BASESPEED = 75;       // Base speed.  Light values will reduce this to turn
 const bool SIMPLE_LOGIC = false; // Use a simple or more complex approach
+// Define Bump Pin Assignments: CHANGE AS NEEDED DEPENDING ON HOW YOUR BUMP FEELERS POINT!
+const byte LEFT_BUMP_PIN = 47;    // Define DIGITAL Pins for left
+const byte RIGHT_BUMP_PIN = 46;   // and right bump sensors
 
 // Define 'ports' for motors.
 const byte LEFT_MOTOR_PORT = 3;

@@ -55,6 +55,7 @@ void loop(void) {
 
   // delay(2000); // Delay no longer needed!
   while (digitalRead(RIGHT_BUMP_PIN) == HIGH) {} // PAUSE until Right bumper hit
+  while (digitalRead(RIGHT_BUMP_PIN) != HIGH) {} // PAUSE until Right bumper released
 
   /* Autonomous loop for determining power and distance, will
      run through each power 5 times, for replicates, then advance power

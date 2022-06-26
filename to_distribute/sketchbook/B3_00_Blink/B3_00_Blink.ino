@@ -34,7 +34,7 @@ void setup() {
 // the loop function runs over and over again forever
 void loop() {
   int DelayTime = 1000;
-  int DelayTime =  random(10, 1000);
+  // int DelayTime =  random(10, 1000);
   digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
   delay(DelayTime);                       // wait for a second
   digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
