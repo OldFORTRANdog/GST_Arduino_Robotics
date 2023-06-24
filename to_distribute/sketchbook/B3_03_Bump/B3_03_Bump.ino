@@ -12,6 +12,7 @@
    Programmer: Dave Eslinger; June 12, 2015
    Major revisions:
          July 3, 2015 DLE (renamed, changed motorshield pointer passing)
+         June 24, 2023 DLE (Remove unused Serial initiation)
 */
 #include <Wire.h>
 #include <Adafruit_MotorShield.h>
@@ -40,8 +41,7 @@ void setup(void) {
   // Turn off all motors to start, just a good habit
   motorLeft->run(RELEASE);
   motorRight->run(RELEASE);
-  Serial.begin(9600);  //Begin serial communcation
-
+ 
   /*Set up Bump Pins with Arduino internal pullup resistors
     This will make them always high unless a bump switch is hit,
     which will make a connection to ground and they will read low. */

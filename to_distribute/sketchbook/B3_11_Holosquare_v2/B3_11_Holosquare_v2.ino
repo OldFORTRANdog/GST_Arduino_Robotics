@@ -15,6 +15,7 @@
 			2019, July 5: Added the bump sensors to start each run. Also modified to
 			 	use the new calls in BreadBoardBot.h library and saved as v2. DLE
       2021, July 6: Changed to use angle as loop variable, removed all old commented out code. DLE
+      2023, June 24: Changed hard-code for 4 sides into a variable for number of sides and angle increment
 */
 #include <Adafruit_MotorShield.h>
 #include <math.h>
@@ -47,6 +48,9 @@ byte motorLeftdir;     // Clockwise or Counter clockwise for the 3 wheels
 byte motorBackdir;
 byte motorRightdir;
 
+int numSides = 4;      // Number of sides in the polygon
+int angleIncrement = 360/numSides; // Angle increment for polygon with numSides 
+
 void setup(void) {
   Serial.begin(9600);  //Begin serial communcation
   AFMS.begin();  // create with the default frequency 1.6KHz
@@ -74,7 +78,10 @@ void loop(void) {
 
   // Loop for the polygon, a square in this case
 
-  for ( int angle = 0; angle < 360; angle += 90 ) {   // Loop by 90 degrees = the number of sides/360.
+  // for ( int angle = 0; angle < 360; angle += 90 ) {   // Loop by 90 degrees = the number of sides/360.
+  
+  // Loop by calculated degrees = the number of sides/360.
+  for ( int angle = 0; angle < 360; angle += angleIncrement ) {   
     odrive(angle, magnitude, duration, brake,
            motorLeft, motorRight, motorBack);
   }

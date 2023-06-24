@@ -1,16 +1,9 @@
-/*  Rick Roll Code
-    AUTHOR: Samantha Lagestee
-    Motor Movement by: Connor Clark (Emailforconnor04@Gmail.com)
-    Copyright 2017 samilagestee at gmail dot com
+/*  Plays "Let it Go"  from Frozen
 
-    This program is free software: you can redistribute it and/or
-    modify it under the terms of the GNU General Public License as
-    published by the Free Software Foundation, either version 3 of
-    the License, or (at your option) any later version.
+Plays the song "Let it go" on a piezo speaker on Pin 31
 
-    DISCLAIMER: The song "Never Gonna Give You Up" by Rick Astley
-    is not the creative property of the author. This code simply
-    plays a Piezo buzzer rendition of the song.
+
+Original credits and license at end of code
 */
 
 #define  a3f    208     // 208 Hz
@@ -236,3 +229,17 @@ void play() {
     a = 1;
   }
 } 
+/*  Rick Roll Code
+    AUTHOR: Samantha Lagestee
+    Motor Movement by: Connor Clark (Emailforconnor04@Gmail.com)
+    Copyright 2017 samilagestee at gmail dot com
+
+    This program is free software: you can redistribute it and/or
+    modify it under the terms of the GNU General Public License as
+    published by the Free Software Foundation, either version 3 of
+    the License, or (at your option) any later version.
+
+    DISCLAIMER: The song "Never Gonna Give You Up" by Rick Astley
+    is not the creative property of the author. This code simply
+    plays a Piezo buzzer rendition of the song.
+*/

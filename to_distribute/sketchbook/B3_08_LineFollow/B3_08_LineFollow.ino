@@ -9,7 +9,8 @@
    Motor Shield: Adafruit assembled Motor Shield for Arduino v2
    ---->  http://www.adafruit.com/products/1438
    Programmer: Dave Eslinger; June 13, 2015
-   Revisions: DLE June 26, 2022 SLOW_FACTOR added
+   Revisions: June 26, 2022 SLOW_FACTOR added, DLE
+              June 24, 2023, SLOW_FACTOR as float and clarify comments
 */
 #include <Adafruit_MotorShield.h>
 #include <BreadBoardBot.h>
@@ -30,14 +31,14 @@ const byte RIGHT_IR_PIN = A10;
 // Parameters controlling program behavior
 // Bump behavior
 const byte FORWARD_SPEED = 120;   // Define normal speeds
-const int  SLOW_FACTOR = 0.5;     // Amount to slow wheel for turning
+const float  SLOW_FACTOR = 0.5;     // Amount to slow wheel for turning
 
 // Line Following
 const byte FOLLOW_LEFT_SIDE = 1;
 const float HI_LIGHT = 0.80;     // Keep the BRIGHT side of the line ABOVE this
-// fraction of the Maximum read by that sensor
+// fraction of the light range read by that sensor
 const float LO_LIGHT = 0.20;     // Keep the DARK side of the line BELOW this
-// fraction of the Maximum read by that sensor
+// fraction of the light range read by that sensor
 
 // Define 'ports' for motors.
 const byte LEFT_MOTOR_PORT = 3;
