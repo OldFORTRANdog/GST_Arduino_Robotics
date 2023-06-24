@@ -1,11 +1,7 @@
 # Dave's additions
 .vscode
-*/libraries/Adafruit*
-*/libraries/Timed*
-*/libraries/NewPing*
-*/libraries/elapsed*
-*/libraries/readme.txt
-*/NewPing.zip
+libraries
+NewPing*.zip
 */~$*
 *~
 # Windows image file caches

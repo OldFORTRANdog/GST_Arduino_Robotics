@@ -26,7 +26,7 @@ Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
 // Define Servos
 Servo panServo;
-Servo tiltServo;
+// Servo tiltServo;
 
 /* Define Constants */
 

@@ -2,10 +2,10 @@
 	Dave Eslinger, 19 July, 2016
 	GoSciTech Ardino Robotics Course */
 	
-const byte RED_PIN = 7;
-const byte GREEN_PIN = 6;
-const byte BLUE_PIN = 5;
-const int SPEED = 3;
+const byte RED_PIN = 23;
+const byte GREEN_PIN = 24;
+const byte BLUE_PIN = 22;
+const int SPEED = 10;
 int r, g, b; // our color values, 0-255
 
 void setup() {

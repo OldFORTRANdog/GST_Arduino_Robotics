@@ -129,7 +129,8 @@ void loop() {
   pingDist = Distance_inches(sonic.ping_median());
   Serial.println("First straight distance = " + String(pingDist));
   while (digitalRead(LEFT_BUMP_PIN) && digitalRead(RIGHT_BUMP_PIN)
-         && pingDist > TARGET_DISTANCE_INCHES) {
+        && (pingDist > TARGET_DISTANCE_INCHES
+         || pingDist <= 1.0)) {
     motorLeft->run(FORWARD);
     motorRight->run(FORWARD);
     pingDist = Distance_inches(sonic.ping_median());
