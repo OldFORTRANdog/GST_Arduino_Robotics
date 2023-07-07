@@ -117,7 +117,7 @@ Copied for GoSciTech Arduino Robotics, July 9, 2019 by Dave Eslinger.
 #define S Q/4 // sixteenth 1/16
 #define W 4*Q // whole 4/4
 
-const byte TONE_PIN = 16; // by DLE 7/9/2019
+const byte TONE_PIN = 31; // by DLE 7/7/2023
 
 void setup() {
 pinMode(TONE_PIN, OUTPUT);

@@ -8,6 +8,7 @@
 
    Programmer: Dave Eslinger; June 7, 2015
    Revisions:
+      2023, July 7: Changed bump pin assignments and loop index names. DLE
 */
 #include <Adafruit_MotorShield.h>
 #include <BreadBoardBot.h>
@@ -18,8 +19,8 @@ Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 // Define Constants
 
 // IO Pins used
-const byte LEFT_BUMP_PIN = 47;    // Define DIGITAL Pins for left
-const byte RIGHT_BUMP_PIN = 46;   // and right bump sensors
+const byte LEFT_BUMP_PIN = 53;    // Define DIGITAL Pins for left
+const byte RIGHT_BUMP_PIN = 52;   // and right bump sensors
 
 const byte TESTSPEED = 155;
 const float SIDE_LENGTH = 12; // the length of 1 side of the square
@@ -46,14 +47,21 @@ void setup(void) {
 void loop(void) {
 
   // Autonomous loop for driving in a square
-  for ( byte leg = 1; leg <= 4; leg++ ) {
+  for ( byte i = 1; i <= 4; i++ ) {
     drive(SIDE_LENGTH, TESTSPEED, motorLeft, motorRight);// Forward for SIDE_LENGTH units
     spin(-90., TESTSPEED, motorLeft, motorRight); // 90 deg. to left
     allStop(FORWARD, motorLeft, motorRight);
     delay(500);  // Pause for 1/2 a second after turning
   }
   delay(3000);
-  for ( byte leg = 1; leg <= 4; leg++ ) {
+  for ( byte i = 1; i <= 4; i++ ) {
+    /* Important! This "i" variable is completely different from the one used above. 
+    Variables have a "scope" which is the range of the program over which they are valid.
+    Each of these "i" variables is limited in scope to the loop in which it is defined.
+    In general, all variables are limited to the part of the program in which they are 
+    defined.  That is why we define our "global" variables and constants before any
+    functions. They are then available in all following functions.
+    */
     drive(SIDE_LENGTH, TESTSPEED, motorLeft, motorRight);// Forward for 10 inches
     spin(90., TESTSPEED, motorLeft, motorRight); // 90 deg. to left
     allStop(FORWARD, motorLeft, motorRight);

@@ -11,6 +11,7 @@
    Programmer: Dave Eslinger; June 13, 2015
    Revisions: June 26, 2022 SLOW_FACTOR added, DLE
               June 24, 2023, SLOW_FACTOR as float and clarify comments
+              2023, July 7: Changed bump pin assignments. DLE
 */
 #include <Adafruit_MotorShield.h>
 #include <BreadBoardBot.h>
@@ -21,17 +22,17 @@ Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 /* Define Constants */
 
 // IO Pins used
-const byte LEFT_BUMP_PIN = 47;    // Define DIGITAL Pins for left
-const byte RIGHT_BUMP_PIN = 46;   // and right bump sensors
-const byte LEFT_IR_LED_PIN = 43;
+const byte LEFT_BUMP_PIN = 53;    // Define DIGITAL Pins for left
+const byte RIGHT_BUMP_PIN = 52;   // and right bump sensors
+const byte LEFT_IR_LED_PIN = 51;
 const byte LEFT_IR_PIN = A11;
-const byte RIGHT_IR_LED_PIN = 42;
+const byte LEFT_IR_LED_PIN = 50;
 const byte RIGHT_IR_PIN = A10;
 
 // Parameters controlling program behavior
 // Bump behavior
 const byte FORWARD_SPEED = 120;   // Define normal speeds
-const float  SLOW_FACTOR = 0.5;     // Amount to slow wheel for turning
+const float  SLOW_FACTOR = 0.3;     // Amount to slow wheel for turning
 
 // Line Following
 const byte FOLLOW_LEFT_SIDE = 1;

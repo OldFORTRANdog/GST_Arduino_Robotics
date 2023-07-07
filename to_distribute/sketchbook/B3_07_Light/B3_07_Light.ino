@@ -20,6 +20,7 @@
 
    Programmer: Dave Eslinger; June 7, 2015
    Revisions:
+              2023, July 7: Changed bump pin assignments. DLE
 */
 #include <Adafruit_MotorShield.h>
 #include <BreadBoardBot.h>
@@ -35,8 +36,8 @@ const bool PHOTOTAXIS = true;    // Goes towards light (true) or away (false)
 const byte BASESPEED = 75;       // Base speed.  Light values will reduce this to turn
 const bool SIMPLE_LOGIC = false; // Use a simple or more complex approach
 // Define Bump Pin Assignments: CHANGE AS NEEDED DEPENDING ON HOW YOUR BUMP FEELERS POINT!
-const byte LEFT_BUMP_PIN = 47;    // Define DIGITAL Pins for left
-const byte RIGHT_BUMP_PIN = 46;   // and right bump sensors
+const byte LEFT_BUMP_PIN = 53;    // Define DIGITAL Pins for left
+const byte RIGHT_BUMP_PIN = 52;   // and right bump sensors
 
 // Define 'ports' for motors.
 const byte LEFT_MOTOR_PORT = 3;

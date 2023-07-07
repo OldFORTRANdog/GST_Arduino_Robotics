@@ -16,6 +16,7 @@
 			 	use the new calls in BreadBoardBot.h library and saved as v2. DLE
       2021, July 6: Changed to use angle as loop variable, removed all old commented out code. DLE
       2023, June 24: Changed hard-code for 4 sides into a variable for number of sides and angle increment
+      2023, July 7: Changed bump pin assignments. DLE
 */
 #include <Adafruit_MotorShield.h>
 #include <math.h>
@@ -26,8 +27,8 @@ Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
 // Define Constants
 // IO Pins used
-const byte LEFT_BUMP_PIN = 47;    // Define DIGITAL Pins for left
-const byte RIGHT_BUMP_PIN = 46;   // and right bump sensors
+const byte LEFT_BUMP_PIN = 53;    // Define DIGITAL Pins for left
+const byte RIGHT_BUMP_PIN = 52;   // and right bump sensors
 
 // Define 'ports' for motors.
 const byte LEFT_MOTOR_PORT = 3;
@@ -69,12 +70,12 @@ void setup(void) {
   delay(600); // Bump pin triggered and released, just give 0.6 seconds to get hands out of the way.
   Serial.println("Beginning");
 }
-void loop(void) {
 
+void loop(void) {
   /* Autonomous loop for driving in a square */
-  duration = 1000;                          //  One second at each angle
-  magnitude = 150;                          //  Set power
-  brake = false;                       //  No braking
+  duration = 1000;    //  One second at each angle
+  magnitude = 150;    //  Set power
+  brake = false;      //  No braking
 
   // Loop for the polygon, a square in this case
 

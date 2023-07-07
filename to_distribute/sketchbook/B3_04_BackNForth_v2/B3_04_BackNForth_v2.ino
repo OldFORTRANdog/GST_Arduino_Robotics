@@ -59,7 +59,7 @@ void loop(void){
   motorRight->run(BACKWARD);
   delay(1000);
   
-  allStop(BACKWARD, motorLeft, motorRight); // This function is now in our include file!
+  allStop(BACKWARD, motorLeft, motorRight); // This function is now in our library!
 
   while (1);                // What does this do?
 }

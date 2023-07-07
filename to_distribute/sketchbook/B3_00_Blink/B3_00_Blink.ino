@@ -20,7 +20,7 @@
   by Colby Newman
 
   modified 12 Mar 2021
-  by Dave Eslinger
+  by Dave Eslinger: Just a name change for GoSciTech robotics camp.
 */
 
 

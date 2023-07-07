@@ -13,10 +13,11 @@
    Motor Shield: Adafruit assembled Motor Shield for Arduino v2
    ---->  http://www.adafruit.com/products/1438
 
-   Programmer: Dave Eslinger; June 7, 2015
+   Programmer: Dave Eslinger (DLE); June 7, 2015
    Major revisions:
-         7/3/2015 DLE: renamed, changed motorshield pointer passing)
-         7/6/2015 DLE: Changed to use bump switches for running
+         2015, July 3: Renamed, changed motorshield pointer passing)
+         2015, July 6: Changed to use bump switches for running
+         2023, July 7: Changed bump pin assignments and loop index names. DLE
 */
 #include <Adafruit_MotorShield.h>
 #include <BreadBoardBot.h>
@@ -25,8 +26,8 @@
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
 // Define Pin Assignments
-const byte LEFT_BUMP_PIN = 47;    // Define DIGITAL Pins for left
-const byte RIGHT_BUMP_PIN = 46;   // and right bump sensors
+const byte LEFT_BUMP_PIN = 53;    // Define DIGITAL Pins for left
+const byte RIGHT_BUMP_PIN = 52;   // and right bump sensors
 // Define Constants
 #define TESTTIME 1000
 #define WAITTIME 1000
@@ -62,9 +63,9 @@ void loop(void) {
      by 50.  Therefore it tests: 50, 100, 150, 200 and 250.
   */
 
-  for ( byte leg = 0; leg <= 4; leg++ ) {
-    byte speed = 50 + 50 * leg;
-    for (byte trial = 1; trial <= 5; trial++ ) {
+  for ( byte speed_increment = 0; speed_increment <= 4; speed_increment++ ) {
+    byte speed = 50 + 50 * speed_increment;
+    for (byte iteration = 1; iteration <= 5; iteration++ ) {
       delay(WAITTIME);  // Wait for hands to get out of the way!
       motorLeft->setSpeed(speed);  // Set both speeds
       motorRight->setSpeed(speed);
@@ -78,7 +79,7 @@ void loop(void) {
 
   }
   // One last loop for full speed, 255, just for fun!
-  for (byte trial = 1; trial <= 5; trial++ ) {
+  for (byte iteration = 1; iteration <= 5; iteration++ ) {
     delay(WAITTIME);  // Wait for hands to get out of the way!
     motorLeft->setSpeed(255);  // Set both speeds
     motorRight->setSpeed(255);

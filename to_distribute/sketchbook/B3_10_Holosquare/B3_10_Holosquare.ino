@@ -7,12 +7,13 @@
    Motor Shield: Adafruit assembled Motor Shield for Arduino v2
    ---->  http://www.adafruit.com/products/1438
 
-   Programmer: Dave Eslinger; December 2, 2014
-   Revisions: 2015, May 25:   Changed for new motor configuration. DLE
-              2015, June 12:  Changed into B3_ code style for GoSciTech 2015. DLE
+   Programmer: Dave Eslinger (DLE); December 2, 2014
+   Revisions: 2015, May 25: Changed for new motor configuration. DLE
+              2015, June 12: Changed into B3_ code style for GoSciTech 2015. DLE
               2015, July 9: Name change, cleaned up and additional comments added. DLE
               2015, July 10: Change default BACK motor port
               2019, July 5: Added the bump sensors to start each run. DLE
+              2023, July 7: Changed bump pin assignments. DLE
 */
 #include <Adafruit_MotorShield.h>
 #include <math.h>                  // New library for Trig functions
@@ -26,8 +27,8 @@ const float cos30sin60 = sqrt(3.0) / 2.0; // cos(30 deg) = sin(60 deg), need for
 // vector calcs.
 
 // IO Pins used
-const byte LEFT_BUMP_PIN = 47;    // Define DIGITAL Pins for left
-const byte RIGHT_BUMP_PIN = 46;   // and right bump sensors
+const byte LEFT_BUMP_PIN = 53;    // Define DIGITAL Pins for left
+const byte RIGHT_BUMP_PIN = 52;   // and right bump sensors
 
 // Define 'ports' for motors.
 const byte LEFT_MOTOR_PORT = 3;
@@ -70,11 +71,11 @@ void loop(void) {
   // N.B.  Need to comment out one bracket at end for the autonomous loop below
 
   /* Autonomous loop for driving in a square */
-  for ( byte leg = 1; leg < 6; leg++ ) {   // 5 times through loop for a square, why?
-    duration = 2;                          // Constants per leg: Two seconds/leg
+  for ( byte i = 1; i < 6; i++ ) {   // 5 times through loop for a square, why?
+    duration = 2;                          // Constants per i: Two seconds/i
     magnitude = 50;                        //                    50% max power
     bool brake = false;                    //                    No braking
-    switch (leg) {
+    switch (i) {
       case 1: // Move forward
         direction = 0.;
         break;

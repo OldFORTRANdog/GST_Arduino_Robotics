@@ -9,10 +9,11 @@
    Motor Shield: Adafruit assembled Motor Shield for Arduino v2
    ---->  http://www.adafruit.com/products/1438
 
-   Programmer: Dave Eslinger; June 12, 2015
+   Programmer: Dave Eslinger (DLE); June 12, 2015
    Major revisions:
-         July 3, 2015 DLE (renamed, changed motorshield pointer passing)
-         June 24, 2023 DLE (Remove unused Serial initiation)
+         July 3, 2015 Renamed, changed motorshield pointer passing. DLE
+         June 24, 2023 Remove unused Serial initiation. DLE
+         July 7, 2023 Changed bump pin assignments. DLE
 */
 #include <Wire.h>
 #include <Adafruit_MotorShield.h>
@@ -21,8 +22,8 @@
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
 // Define Bump Pin Assignments: CHANGE AS NEEDED DEPENDING ON HOW YOUR BUMP FEELERS POINT!
-const byte LEFT_BUMP_PIN = 47;    // Define DIGITAL Pins for left
-const byte RIGHT_BUMP_PIN = 46;   // and right bump sensors
+const byte LEFT_BUMP_PIN = 53;    // Define DIGITAL Pins for left
+const byte RIGHT_BUMP_PIN = 52;   // and right bump sensors
 // Define Constants
 const byte FORWARD_SPEED = 150;   // Define normal speeds
 const byte BACKWARD_SPEED = 100;  // and backup/turn speed
@@ -43,7 +44,7 @@ void setup(void) {
   motorRight->run(RELEASE);
  
   /*Set up Bump Pins with Arduino internal pullup resistors
-    This will make them always high unless a bump switch is hit,
+    This will make them always high (+5 V, logical TRUE) unless a bump switch is hit,
     which will make a connection to ground and they will read low. */
   pinMode(LEFT_BUMP_PIN, INPUT_PULLUP);
   pinMode(RIGHT_BUMP_PIN, INPUT_PULLUP);

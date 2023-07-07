@@ -50,7 +50,7 @@ void loop(void){
   
   delay(duration);
   
- motorLeft->run(RELEASE);   // Now stop the motors
+ motorLeft->run(RELEASE);   // Now stop giving power to the motors
  motorRight->run(RELEASE);  // However, this just coasts
 
 /* Here is a braking method: run backwards a bit */
