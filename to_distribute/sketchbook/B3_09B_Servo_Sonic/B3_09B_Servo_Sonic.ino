@@ -56,8 +56,8 @@ Servo panServo;
 // IO Pins used
 const byte LEFT_BUMP_PIN = 53;   // Define DIGITAL Pins for left
 const byte RIGHT_BUMP_PIN = 52;  // and right bump sensors
-const byte SONIC_TRIGGER_PIN = 49;
-const byte SONIC_ECHO_PIN = 48;
+const byte SONIC_TRIGGER_PIN = 39;
+const byte SONIC_ECHO_PIN = 38;
 
 // Parameters controlling program behavior
 // Bump behavior
@@ -67,7 +67,7 @@ const int TURN_DURATION = 600;    // Turn length in milliseconds
 
 // Sonic sensor
 const float TARGET_DISTANCE_INCHES = 7;
-const int MAX_SONIC_DISTANCE = 500;  // cm, optional, 500 cm is default
+const int MAX_SONIC_DISTANCE = 100;  // cm, optional, 500 cm is default
 
 // Define 'ports' for motors.
 const byte LEFT_MOTOR_PORT = 3;
@@ -81,7 +81,7 @@ Adafruit_DCMotor *motorRight = AFMS.getMotor(RIGHT_MOTOR_PORT);
 NewPing sonic(SONIC_TRIGGER_PIN, SONIC_ECHO_PIN, MAX_SONIC_DISTANCE);
 
 /* Define servo pins */
-const byte PANSERVOPIN = 10;  // Servo 1 on AdaFruit Motor Shield
+const byte PANSERVOPIN = 9;  // Servo 1 on AdaFruit Motor Shield
 //const byte TILTSERVOPIN = 9; // Servo 2
 
 float pingDist;  // define variable to use for distance measurements

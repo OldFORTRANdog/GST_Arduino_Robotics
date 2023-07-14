@@ -11,7 +11,6 @@ Programmer: Dave Eslinger; 2019, July 7
 
 // NOT WORKING YET!!!!
 
-#include <Wire.h>
 #include <Adafruit_MotorShield.h>
 #include <math.h>
 #include <BreadBoardBot.h>

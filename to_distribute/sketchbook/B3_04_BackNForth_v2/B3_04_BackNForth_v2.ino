@@ -14,7 +14,6 @@
    Major revisions:
          July 3, 2015 DLE (renamed, changed motorshield pointer passing) 
 */
-#include <Wire.h>
 #include <Adafruit_MotorShield.h> 
 #include <BreadBoardBot.h>
 

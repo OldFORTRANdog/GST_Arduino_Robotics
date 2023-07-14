@@ -24,9 +24,9 @@ Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 // IO Pins used
 const byte LEFT_BUMP_PIN = 53;    // Define DIGITAL Pins for left
 const byte RIGHT_BUMP_PIN = 52;   // and right bump sensors
-const byte LEFT_IR_LED_PIN = 51;
+const byte LEFT_IR_LED_PIN = 49;
 const byte LEFT_IR_PIN = A11;
-const byte LEFT_IR_LED_PIN = 50;
+const byte RIGHT_IR_LED_PIN = 48;
 const byte RIGHT_IR_PIN = A10;
 
 // Parameters controlling program behavior

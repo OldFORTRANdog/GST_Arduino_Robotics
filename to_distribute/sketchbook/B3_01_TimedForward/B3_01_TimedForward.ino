@@ -15,7 +15,6 @@
          7/4/2015 DLE renamed
 
 */
-#include <Wire.h>
 #include <Adafruit_MotorShield.h> 
 
 // Create the motor shield object with the default I2C address

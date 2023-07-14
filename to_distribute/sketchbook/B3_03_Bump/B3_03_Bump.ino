@@ -15,7 +15,6 @@
          June 24, 2023 Remove unused Serial initiation. DLE
          July 7, 2023 Changed bump pin assignments. DLE
 */
-#include <Wire.h>
 #include <Adafruit_MotorShield.h>
 
 // Create the motor shield object with the default I2C address
