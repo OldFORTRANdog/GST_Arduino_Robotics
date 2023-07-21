@@ -1,10 +1,10 @@
 /* B3_Multitasking.ino
 
+Omniwheel version of servo sonic with a blinking LED
+
 Demonstration of using the micros() command and timers to perform multiple operations simultaneously.  
 This would not be possible using delay(), since it stops almost all activity while waiting for the
 delay to finish.
-
-
 
    Arduino: Arduino Mega 256 v3 Clone
    Motor Shield: Adafruit assembled Motor Shield for Arduino v2
@@ -135,10 +135,11 @@ void loop() {
   unsigned long currentMillis = millis();   // get current time value in milliseconds.
                                             // Serial.println(String("currentMillis is " + String(currentMillis)
                                             //                       + ", previous LED Millis is " + String(prevLEDMillis)));
-  motorLeft->setSpeed(FORWARD_SPEED);  // Slowly back up and turn to right
-  motorRight->setSpeed(FORWARD_SPEED);
-  motorLeft->run(FORWARD);
-  motorRight->run(FORWARD);
+  // motorLeft->setSpeed(FORWARD_SPEED);  // Slowly back up and turn to right
+  // motorRight->setSpeed(FORWARD_SPEED);
+  // motorLeft->run(FORWARD);
+  // motorRight->run(FORWARD);""
+  Serial.println("Normal drive")
 
   if (currentMillis - prevLEDMillis >= ledInc) {  // Check if LED increment has been exceeded. If so...
     prevLEDMillis = currentMillis;                // Update previous value then
@@ -166,21 +167,25 @@ void loop() {
       nping++;
       if (pingDist == 0.0) { pingDist = MAX_SONIC_DISTANCE; }
       currentMillis = millis();  // get current time value in milliseconds.
-      String outMsg = String("Ping distance is " + String(pingDist)
-                             + " and millis " + String(currentMillis));
-      Serial.println(outMsg);
+      // String outMsg = String("Ping distance is " + String(pingDist)
+      //                        + " and millis " + String(currentMillis));
+      Serial.println(String("Ping distance is " + String(pingDist)
+                             + " and millis " + String(currentMillis)));
       pingDist = Distance_inches(sonic.ping());
     } while (pingDist <= 1.0);
-    String outMsg = String("Ping distance is " + String(pingDist) + " after "
+    // String outMsg = String("Ping distance is " + String(pingDist) + " after "
+    //                        + String(nping) + " pings at angle " + String(angle)
+    //                        + " and millis " + String(currentMillis));
+    Serial.println(String("Ping distance is " + String(pingDist) + " after "
                            + String(nping) + " pings at angle " + String(angle)
-                           + " and millis " + String(currentMillis));
-    Serial.println(outMsg);
+                           + " and millis " + String(currentMillis)));
     if (pingDist > maxDist) {
       newDirection = map(angle, 180, 0, -90, 90);
       maxDist = pingDist;
-      String outMsg = String("New maximum distance is " + String(pingDist)
-                             + " at direction " + String(newDirection));
-      Serial.println(outMsg);
+      // String outMsg = String("New maximum distance is " + String(pingDist)
+      //                        + " at direction " + String(newDirection));
+      Serial.println(String("New maximum distance is " + String(pingDist)
+                             + " at direction " + String(newDirection)));
     }
   }
 
