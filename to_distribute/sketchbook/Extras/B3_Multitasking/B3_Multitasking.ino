@@ -36,8 +36,8 @@ const byte SONIC_ECHO_PIN = 38;
 // Bump behavior
 /* NOTE: This program uses the odrive functions in the BreadBoardBot library. Therefore, the
    speeds are given as percentage of maximum 90-100) and durations are in SECONDS. */
-const byte FORWARD_SPEED = 75;        // Define normal speeds,
-const byte BACKWARD_SPEED = 50;       // and backup/turn speed
+const byte FORWARD_SPEED = 95;        // Define normal speeds,
+const byte BACKWARD_SPEED = 80;       // and backup/turn speed
 const float BACKWARD_DURATION = 0.5;  //Turn length in Seconds
 const int TURN_ANGLE = 40;            // Turn angle
 
@@ -139,7 +139,7 @@ void setup(void) {
   while (!digitalRead(RIGHT_BUMP_PIN)) {};
   delay(300);  // Bump pin triggered and released, just give 0.3 seconds to get hands out of the way.
   if (TEST) {
-    odrive(-90, 50, 2, true,
+    odrive(-90, 90, 2, true,
            motorLeft, motorRight, motorBack);
     while (1) {};
   } else {
