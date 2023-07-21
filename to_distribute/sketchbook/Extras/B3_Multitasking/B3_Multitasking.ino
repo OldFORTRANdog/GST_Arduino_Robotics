@@ -18,6 +18,8 @@ delay to finish.
 #include <BreadBoardBot.h>
 #include <Servo.h>
 #include <NewPing.h>  // Another new library, this one to use the sonic sensor
+// Option to change sonar behavior
+#define NO_ECHO 1450  // Changes value used in NewPing library when there is no sonar return.
 
 /*  ======================= Define Constants, these cannot change ================= */
 
@@ -37,7 +39,7 @@ const int TURN_DURATION = 600;    // Turn length in milliseconds
 
 // Sonic sensor
 const float TARGET_DISTANCE_INCHES = 7;
-const int MAX_SONIC_DISTANCE = 500;  // cm, optional, 500 cm is default
+const int MAX_SONIC_DISTANCE = 200;  // cm, optional, 500 cm is default
 
 // Define 'ports' for motors.
 const byte LEFT_MOTOR_PORT = 3;
@@ -130,9 +132,13 @@ void setup(void) {
 
 void loop() {
 
-  unsigned long currentMillis = millis();  // get current time value in milliseconds.
-  // Serial.println(String("currentMillis is " + String(currentMillis) + ", previous LED Millis is " + String(prevLEDMillis)));
-
+  unsigned long currentMillis = millis();   // get current time value in milliseconds.
+                                            // Serial.println(String("currentMillis is " + String(currentMillis)
+                                            //                       + ", previous LED Millis is " + String(prevLEDMillis)));
+  motorLeft->setSpeed(FORWARD_SPEED);  // Slowly back up and turn to right
+  motorRight->setSpeed(FORWARD_SPEED);
+  motorLeft->run(FORWARD);
+  motorRight->run(FORWARD);
 
   if (currentMillis - prevLEDMillis >= ledInc) {  // Check if LED increment has been exceeded. If so...
     prevLEDMillis = currentMillis;                // Update previous value then
@@ -150,53 +156,64 @@ void loop() {
     if (angle <= 20 || angle >= 160) {                // Check to see if angle is at end of range if so
       angleInc = -angleInc;                           // Change increment to opposite direction
     }
-    panServo.write(angle);
+    // panServo.write(angle);
     int nping = 0;
     do {
       // pingDist = Distance_inches(sonic.ping_median(5));
-      pingDist = Distance_inches(sonic.ping());
+      pingDist = Distance_inches(sonic.ping(MAX_SONIC_DISTANCE));
+      // pingDist = sonic.convert_in(sonic.ping(MAX_SONIC_DISTANCE));
+      // pingDist = sonic.ping_cm(5000);
       nping++;
-      // pingDist = Distance_inches(sonic.ping());
+      if (pingDist == 0.0) { pingDist = MAX_SONIC_DISTANCE; }
+      currentMillis = millis();  // get current time value in milliseconds.
+      String outMsg = String("Ping distance is " + String(pingDist)
+                             + " and millis " + String(currentMillis));
+      Serial.println(outMsg);
+      pingDist = Distance_inches(sonic.ping());
     } while (pingDist <= 1.0);
-    // String outMsg = String("Ping distance is " + String(pingDist) + " after " + String(nping) + " pings at angle " + String(angle));
-    // Serial.println(outMsg);
+    String outMsg = String("Ping distance is " + String(pingDist) + " after "
+                           + String(nping) + " pings at angle " + String(angle)
+                           + " and millis " + String(currentMillis));
+    Serial.println(outMsg);
     if (pingDist > maxDist) {
       newDirection = map(angle, 180, 0, -90, 90);
       maxDist = pingDist;
-      String outMsg = String("New maximum distance is " + String(pingDist) + " at direction " + String(newDirection));
+      String outMsg = String("New maximum distance is " + String(pingDist)
+                             + " at direction " + String(newDirection));
       Serial.println(outMsg);
     }
   }
-  if (digitalRead(LEFT_BUMP_PIN) && digitalRead(RIGHT_BUMP_PIN)
-      && (pingDist > TARGET_DISTANCE_INCHES
-          || pingDist <= 1.0)) {
+
+  // if (digitalRead(LEFT_BUMP_PIN) && digitalRead(RIGHT_BUMP_PIN)
+  //     && (pingDist > TARGET_DISTANCE_INCHES
+  //         || pingDist <= 1.0)) {
+
+    if (!digitalRead(LEFT_BUMP_PIN)) {          // the LEFT side switch was bumped
+      motorLeft->setSpeed(BACKWARD_SPEED / 3);  // Slowly back up and turn to right
+      motorRight->setSpeed(BACKWARD_SPEED);
+      motorLeft->run(BACKWARD);
+      motorRight->run(BACKWARD);
+      delay(TURN_DURATION);      // for specified duration
+      motorLeft->run(RELEASE);   // Then stop power to the motors
+      motorRight->run(RELEASE);  // and move to next section of code
+    }
+    // Then check the right sensor:
+    else if (!digitalRead(RIGHT_BUMP_PIN)) {  // the RIGHT side switch was bumped
+      motorLeft->setSpeed(BACKWARD_SPEED);    // Slowly back up and turn to left
+      motorRight->setSpeed(BACKWARD_SPEED / 3);
+      motorLeft->run(BACKWARD);
+      motorRight->run(BACKWARD);
+      delay(TURN_DURATION);      // for specified duration
+      motorLeft->run(RELEASE);   // Then stop power to the motors
+      motorRight->run(RELEASE);  // and move to next section of code
+    }
+    // It must have been the sonar sensor
+    else {
+      newDirection = map(angle, 180, 0, -90, 90);
+      spin(newDirection, 75, motorLeft, motorRight);
+      panServo.write(90);
+      maxDist = -999.;
+    }
     motorLeft->run(FORWARD);
     motorRight->run(FORWARD);
-  } else if (!digitalRead(LEFT_BUMP_PIN)) {   // the LEFT side switch was bumped
-    motorLeft->setSpeed(BACKWARD_SPEED / 3);  // Slowly back up and turn to right
-    motorRight->setSpeed(BACKWARD_SPEED);
-    motorLeft->run(BACKWARD);
-    motorRight->run(BACKWARD);
-    delay(TURN_DURATION);      // for specified duration
-    motorLeft->run(RELEASE);   // Then stop power to the motors
-    motorRight->run(RELEASE);  // and move to next section of code
   }
-  // Then check the right sensor:
-  else if (!digitalRead(RIGHT_BUMP_PIN)) {  // the RIGHT side switch was bumped
-    motorLeft->setSpeed(BACKWARD_SPEED);    // Slowly back up and turn to left
-    motorRight->setSpeed(BACKWARD_SPEED / 3);
-    motorLeft->run(BACKWARD);
-    motorRight->run(BACKWARD);
-    delay(TURN_DURATION);      // for specified duration
-    motorLeft->run(RELEASE);   // Then stop power to the motors
-    motorRight->run(RELEASE);  // and move to next section of code
-  }
-  // It must have been the sonar sensor
-  else {
-    spin(newDirection, 75, motorLeft, motorRight);
-    panServo.write(90);
-    maxDist = -999.;
-  }
-  motorLeft->run(FORWARD);
-  motorRight->run(FORWARD);
-}
