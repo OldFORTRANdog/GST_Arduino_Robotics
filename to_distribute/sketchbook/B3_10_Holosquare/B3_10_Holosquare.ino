@@ -16,19 +16,19 @@
               2023, July 7: Changed bump pin assignments. DLE
 */
 #include <Adafruit_MotorShield.h>
-#include <math.h>                  // New library for Trig functions
+#include <math.h>  // New library for Trig functions
 #include <BreadBoardBot.h>
 
 // Create the motor shield object with the default I2C address
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
 // Define Constants
-const float cos30sin60 = sqrt(3.0) / 2.0; // cos(30 deg) = sin(60 deg), need for wheel
+const float cos30sin60 = sqrt(3.0) / 2.0;  // cos(30 deg) = sin(60 deg), need for wheel
 // vector calcs.
 
 // IO Pins used
-const byte LEFT_BUMP_PIN = 53;    // Define DIGITAL Pins for left
-const byte RIGHT_BUMP_PIN = 52;   // and right bump sensors
+const byte LEFT_BUMP_PIN = 53;   // Define DIGITAL Pins for left
+const byte RIGHT_BUMP_PIN = 52;  // and right bump sensors
 
 // Define 'ports' for motors.
 const byte LEFT_MOTOR_PORT = 3;
@@ -40,17 +40,17 @@ Adafruit_DCMotor *motorRight = AFMS.getMotor(RIGHT_MOTOR_PORT);
 Adafruit_DCMotor *motorBack = AFMS.getMotor(BACK_MOTOR_PORT);
 
 // Define global variables
-float direction;       // Velocity Vector Angle (DEGREES) from forward to drive
-float magnitude;       // Magnitude (0-100) of movement vector in given direction
-float duration;        // Duration to drive at given velocity vector
+float direction;  // Velocity Vector Angle (DEGREES) from forward to drive
+float magnitude;  // Magnitude (0-100) of movement vector in given direction
+float duration;   // Duration to drive at given velocity vector
 
-byte motorLeftdir;     // Clockwise or Counter clockwise for the 3 wheels
+byte motorLeftdir;  // Clockwise or Counter clockwise for the 3 wheels
 byte motorBackdir;
 byte motorRightdir;
 
 void setup(void) {
   Serial.begin(9600);  //Begin serial communcation
-  AFMS.begin();  // create with the default frequency 1.6KHz
+  AFMS.begin();        // create with the default frequency 1.6KHz
   // Turn off all motors
   motorLeft->run(RELEASE);
   motorBack->run(RELEASE);
@@ -63,7 +63,7 @@ void setup(void) {
   // Now wait for the RIGHT bumpsensor to be pressed
   while (digitalRead(RIGHT_BUMP_PIN)) {};
   while (!digitalRead(RIGHT_BUMP_PIN)) {};
-  delay(600); // Bump pin triggered and released, just give 0.6 seconds to get hands out of the way.
+  delay(600);  // Bump pin triggered and released, just give 0.6 seconds to get hands out of the way.
 }
 
 void loop(void) {
@@ -71,37 +71,34 @@ void loop(void) {
   // N.B.  Need to comment out one bracket at end for the autonomous loop below
 
   /* Autonomous loop for driving in a square */
-  for ( byte i = 1; i < 6; i++ ) {   // 5 times through loop for a square, why?
-    duration = 2;                          // Constants per i: Two seconds/i
-    magnitude = 50;                        //                    50% max power
-    bool brake = false;                    //                    No braking
+  for (byte i = 1; i < 6; i++) {  // 5 times through loop for a square, why?
+    duration = 2;                 // Constants per i: Two seconds/i
+    magnitude = 50;               //                    50% max power
+    bool brake = false;           //                    No braking
     switch (i) {
-      case 1: // Move forward
+      case 1:  // Move forward
         direction = 0.;
         break;
-      case 2: // Move right
+      case 2:  // Move right
         direction = 90.;
         break;
-      case 3: // Move backward
+      case 3:  // Move backward
         direction = 180.;
         break;
-      case 4: // Move left
+      case 4:  // Move left
         direction = -90.;
         break;
-      default: // Stop and pause for 4 seconds at starting point
+      default:  // Stop and pause for 4 seconds at starting point
         magnitude = 0;
         duration = 4;
         direction = 0;
-        brake = 1; // hard stop
+        brake = 1;  // hard stop
     }
 
-    if ( duration > 0 ) {
-      Serial.print("direction = ");
-      Serial.print(direction);
-      Serial.print(", magnitude = ");
-      Serial.print(magnitude);
-      Serial.print(" and duration = ");
-      Serial.println(duration);
+    if (duration > 0) {
+      Serial.println(String("\nIn Holosquare: \ndirection = " + String(direction)
+                            + ", magnitude = " + String(magnitude) + ", duration = "
+                            + String(duration) + " and brake = " + String(brake)));
 
       float xVector = magnitude * sin((M_PI * direction) / 180.);
       float yVector = magnitude * cos((M_PI * direction) / 180.);
@@ -111,18 +108,23 @@ void loop(void) {
       Serial.println(yVector);
 
       // Find relative power needed for each wheel based on the target velocity vector
-      float backPower = xVector;  // Multiply by fudge factor to prevent rotation if needed
-      float leftPower = 0.5 * xVector - cos30sin60 * yVector;
-      float rightPower = 0.5 * xVector + cos30sin60 * yVector;
+      /* N.B.: When back motor is mounted in standard position (with wires towards inside 
+          of chassis and connected to Motor connection 2), then its FORWARD direction
+          is to the left, the opposite of our convention.  Therefore, the xVector needs a
+          negative sign in front of it to correct the directionality.
+          */
+      float backPower = -xVector;  // Multiply by fudge factor to prevent rotation if needed
+      float leftPower = -0.5 * xVector - cos30sin60 * yVector;
+      float rightPower = -0.5 * xVector + cos30sin60 * yVector;
 
       // Find the actual motor speeds, 0-255, needed.  N.B. still need motor direction!
-      byte backSpeed  = map(abs(backPower),  0, 100, 0, 255);
-      byte leftSpeed  = map(abs(leftPower),  0, 100, 0, 255);
+      byte backSpeed = map(abs(backPower), 0, 100, 0, 255);
+      byte leftSpeed = map(abs(leftPower), 0, 100, 0, 255);
       byte rightSpeed = map(abs(rightPower), 0, 100, 0, 255);
 
       // Set the speeds
-      motorBack-> setSpeed(backSpeed);
-      motorLeft-> setSpeed(leftSpeed);
+      motorBack->setSpeed(backSpeed);
+      motorLeft->setSpeed(leftSpeed);
       motorRight->setSpeed(rightSpeed);
 
       /* Set Motor directions.  For Adafruit V2 Motorshield:
@@ -133,9 +135,9 @@ void loop(void) {
 
          We can use a trinary operator to set direction within run call
       */
-      motorBack-> run((backPower  > 0) ? FORWARD : BACKWARD );
-      motorLeft-> run((leftPower  > 0) ? BACKWARD : FORWARD );
-      motorRight->run((rightPower > 0) ? FORWARD : BACKWARD );
+      motorBack->run((backPower > 0) ? FORWARD : BACKWARD);
+      motorLeft->run((leftPower > 0) ? BACKWARD : FORWARD);
+      motorRight->run((rightPower > 0) ? FORWARD : BACKWARD);
 
       //Print out motor control details
       Serial.print("Speeds Back,Left,Right = ");
@@ -147,23 +149,22 @@ void loop(void) {
 
       // Run motors for the duration needed, converting from seconds to milliseconds
       delay(1000 * duration);
-      if (brake) {            // Not a real brake, but set power = 0, stop driving motors
+      if (brake) {  // Not a real brake, but set power = 0, stop driving motors
         motorBack->setSpeed(0);
         motorLeft->setSpeed(0);
         motorRight->setSpeed(0);
-        motorBack-> run(RELEASE);
-        motorLeft-> run(RELEASE);
+        motorBack->run(RELEASE);
+        motorLeft->run(RELEASE);
         motorRight->run(RELEASE);
       }
-    }
-    else {                    // no duration entered, so stop all motors
+    } else {  // no duration entered, so stop all motors
       motorBack->setSpeed(0);
       motorLeft->setSpeed(0);
       motorRight->setSpeed(0);
     }
   }
   // Loop complete, so stop until LEFT bumper triggered and released, then rerun
-  while (digitalRead(LEFT_BUMP_PIN)) {}; // Wait until pushed
-  while (!digitalRead(LEFT_BUMP_PIN)) {}; // and released
-  delay (600);                           // and 0.6 seconds to get out of the way
+  while (digitalRead(LEFT_BUMP_PIN)) {};   // Wait until pushed
+  while (!digitalRead(LEFT_BUMP_PIN)) {};  // and released
+  delay(600);                              // and 0.6 seconds to get out of the way
 }

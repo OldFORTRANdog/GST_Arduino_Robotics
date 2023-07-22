@@ -21,7 +21,7 @@ delay to finish.
 // Option to change sonar behavior
 // #define NO_ECHO 1450  // Changes value used in NewPing library when there is no sonar return.
 
-bool TEST = true;
+bool TEST = false;
 /*  ========================= Define Constants, these cannot change ========================= */
 
 // IO Pins used
@@ -35,11 +35,11 @@ const byte SONIC_ECHO_PIN = 38;
 // Parameters controlling program behavior
 // Bump behavior
 /* NOTE: This program uses the odrive functions in the BreadBoardBot library. Therefore, the
-   speeds are given as percentage of maximum 90-100) and durations are in SECONDS. */
-const byte FORWARD_SPEED = 95;        // Define normal speeds,
-const byte BACKWARD_SPEED = 80;       // and backup/turn speed
-const float BACKWARD_DURATION = 0.5;  //Turn length in Seconds
-const int TURN_ANGLE = 40;            // Turn angle
+   speeds are given as range 0 to 255 and durations are in MICROSECONDS. */
+const byte FORWARD_SPEED = 100;      // Define normal speeds,
+const byte BACKWARD_SPEED = 70;     // and backup/turn speed
+const int BACKWARD_DURATION = 250;  //backup length in Seconds
+const int TURN_ANGLE = 40;           // Turn angle
 
 // Sonic sensor
 const float TARGET_DISTANCE_INCHES = 7.;
@@ -139,8 +139,17 @@ void setup(void) {
   while (!digitalRead(RIGHT_BUMP_PIN)) {};
   delay(300);  // Bump pin triggered and released, just give 0.3 seconds to get hands out of the way.
   if (TEST) {
-    odrive(-90, 90, 2, true,
+    // motorLeft->setSpeed(FORWARD_SPEED);  
+    // motorRight->setSpeed(FORWARD_SPEED);
+    // motorBack->setSpeed(FORWARD_SPEED);  
+    // motorLeft->run(FORWARD);
+    // motorRight->run(FORWARD);
+    // motorBack->run(FORWARD);
+    odrive(-90, FORWARD_SPEED, BACKWARD_DURATION, true,
            motorLeft, motorRight, motorBack);
+    Serial.println("\nospinturn\n");
+    ospinturn(-90, FORWARD_SPEED, BACKWARD_DURATION, true,
+              motorLeft, motorRight, motorBack);
     while (1) {};
   } else {
   }
@@ -176,7 +185,7 @@ void loop() {
     if (angle <= 20 || angle >= 160) {                // Check to see if angle is at end of range if so
       angleInc = -angleInc;                           // Change increment to opposite
     }
-    panServo.write(angle);
+    // panServo.write(angle);
     Serial.println("Flow test: PANNING SERVO to " + String(angle)
                    + ", distance is " + String(pingDist));
   }  // end of Servo section
@@ -211,18 +220,19 @@ void loop() {
   /* ========================= Check the sonar sensor ========================= */
   if (pingDist <= TARGET_DISTANCE_INCHES) {
     newDirection = map(maxAngle, 180, 0, -90, 90);
-    spin(newDirection, 75, motorLeft, motorRight);
-    Serial.println(String("Flow test: TOO close, " + String(pingDist)
+    //  ospinturn(TURN_ANGLE, BACKWARD_SPEED, BACKWARD_DURATION, brake,
+    //           motorLeft, motorRight, motorBack);
+   Serial.println(String("Flow test: TOO close, " + String(pingDist)
                           + "inches, spin to " + String(newDirection)));
 
-    panServo.write(90);
+    // panServo.write(90);
     maxDist = -999.;
   }
 
   /* ========================= check the left sensor: ========================= */
   if (!digitalRead(LEFT_BUMP_PIN)) {  // the LEFT side switch was bumped
     Serial.println("Flow test: LEFT BUMP");
-    odrive(0, -BACKWARD_SPEED, BACKWARD_DURATION, brake,
+    odrive(180, -BACKWARD_SPEED, BACKWARD_DURATION, brake,
            motorLeft, motorRight, motorBack);
     ospinturn(TURN_ANGLE, BACKWARD_SPEED, BACKWARD_DURATION, brake,
               motorLeft, motorRight, motorBack);
