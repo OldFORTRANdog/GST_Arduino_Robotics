@@ -27,8 +27,12 @@ N.B.  All power/magnitudes are specified on scale 0-255, times used are all in m
 */
 const float trackWidth = 10.0; // DIstance between part of tire that is on the ground
 
-const float SLOPE = 0.1992;		// From regression equation with data from DriveTest.ino
-const float INTERCEPT = +3.014; // Double check the sign!
+const float DISTANCE_SLOPE = 0.1992;		// From regression equation with data from DriveTest.ino
+const float DISTANCE_INTERCEPT = +3.014;    // Double check the sign!
+
+const float ANGLE_SLOPE = 0.1992;		// From regression equation with data from SpinTest.ino
+const float ANGLE_INTERCEPT = +3.014;   // Double check the sign!
+
 //===============================================================================
 
 void allStop(int oldDirection, Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight)
@@ -75,7 +79,7 @@ float duration_per_distance(float distance, byte speed)
 {
 	/* Find drive time in milliseconds from relationship developed from
 	observations of distance/time for a speed.  */
-	float dist_per_sec = (SLOPE * float(speed)) + INTERCEPT; // in whatever units used, from data
+	float dist_per_sec = (DISTANCE_SLOPE * float(speed)) + DISTANCE_INTERCEPT; // in whatever units used, from data
 	float duration = abs(distance) / dist_per_sec;			 // needed time in sec
 	return duration * 1000.0;								 // Return in milliseconds
 }
@@ -164,6 +168,39 @@ void pivot(float degrees, byte speed, Adafruit_DCMotor *mLeft, Adafruit_DCMotor 
 	delay(duration);
 	mLeft->run(RELEASE);
 	mRight->run(RELEASE);
+	return;
+}
+/* ========================= Omniwheel/holonomic functions ===================*/
+
+float duration_per_angle(float angle, byte speed)
+{
+	/* Find drive time in milliseconds from relationship developed from
+	observations of angle/time for a speed.  */
+	float dist_per_sec = (ANGLE_SLOPE * float(speed)) + ANGLE_INTERCEPT; // in whatever units used, from data
+	float duration = abs(angle) / dist_per_sec;			 // needed time in sec
+	return duration * 1000.0;								 // Return in milliseconds
+}
+
+void drive(float angle, byte speed, Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight)
+{
+	byte direction;
+	mLeft->setSpeed(speed); // Set both speeds
+	mRight->setSpeed(speed);
+
+	if (angle > 0)
+	{ // Postive angle is forward
+		direction = FORWARD;
+	}
+	else
+	{
+		direction = BACKWARD;
+	}
+	float duration = duration_per_angle(angle, speed);
+	/* Now move in the desired directions for that duration */
+	mLeft->run(direction);
+	mRight->run(direction);
+	delay(duration);
+	allStop(direction, mLeft, mRight);
 	return;
 }
 
