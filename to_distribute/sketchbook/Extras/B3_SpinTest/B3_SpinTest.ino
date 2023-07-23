@@ -70,14 +70,15 @@ void loop(void) {
 
     // Loop for iterations at given power
     for (int i = 1; i <= 3; i++) {
-      odrive(direction, power, duration, brake,
-             motorLeft, motorRight, motorBack);
+      ospin(direction, power, duration, brake,
+            motorLeft, motorRight, motorBack);
       while (digitalRead(LEFT_BUMP_PIN)) {};
       while (!digitalRead(LEFT_BUMP_PIN)) {};
       delay(600);  // Bump pin triggered and released, just give 0.6 seconds to get hands out of the way.
     }
+
+    while (digitalRead(RIGHT_BUMP_PIN)) {};
+    while (!digitalRead(RIGHT_BUMP_PIN)) {};
+    delay(600);  // Bump pin triggered and released, just give 0.6 seconds to get hands out of the way.
   }
-  while (digitalRead(RIGHT_BUMP_PIN)) {};
-  while (!digitalRead(RIGHT_BUMP_PIN)) {};
-  delay(600);  // Bump pin triggered and released, just give 0.6 seconds to get hands out of the way.
 }

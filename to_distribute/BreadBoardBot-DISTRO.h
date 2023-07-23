@@ -10,7 +10,7 @@ Motor Shield: Adafruit assembled Motor Shield for Arduino v2
 Programmer & Instructor: Dave Eslinger; June 6, 2015
 Major revisions:
 July 3, 2015 DLE (changed motorshield pointer passing)
-July 7, 2019 DLE Added omniwheel versions of drive (odrive), spin (ospinturn),
+July 7, 2019 DLE Added omniwheel versions of drive (odrive), spin (ospin),
 	and a timed spin (otimedspin)
 July 22, 2023 DLE Corrected omniwheel programs, directionality and braking.
 
@@ -176,32 +176,9 @@ float duration_per_angle(float angle, byte speed)
 {
 	/* Find drive time in milliseconds from relationship developed from
 	observations of angle/time for a speed.  */
-	float dist_per_sec = (ANGLE_SLOPE * float(speed)) + ANGLE_INTERCEPT; // in whatever units used, from data
-	float duration = abs(angle) / dist_per_sec;			 // needed time in sec
+	float degree_per_sec = (ANGLE_SLOPE * float(speed)) + ANGLE_INTERCEPT; // in whatever units used, from data
+	float duration = abs(angle) / degree_per_sec;			 // needed time in sec
 	return duration * 1000.0;								 // Return in milliseconds
-}
-
-void drive(float angle, byte speed, Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight)
-{
-	byte direction;
-	mLeft->setSpeed(speed); // Set both speeds
-	mRight->setSpeed(speed);
-
-	if (angle > 0)
-	{ // Postive angle is forward
-		direction = FORWARD;
-	}
-	else
-	{
-		direction = BACKWARD;
-	}
-	float duration = duration_per_angle(angle, speed);
-	/* Now move in the desired directions for that duration */
-	mLeft->run(direction);
-	mRight->run(direction);
-	delay(duration);
-	allStop(direction, mLeft, mRight);
-	return;
 }
 
 void odrive(float direction, byte magnitude, long duration, bool brake,
@@ -287,7 +264,7 @@ void odrive(float direction, byte magnitude, long duration, bool brake,
 	}
 }
 
-void ospinturn(float direction, byte magnitude, float duration, bool brake,
+void ospin(float direction, byte magnitude, float duration, bool brake,
 			   Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight, Adafruit_DCMotor *mBack)
 {
 	/* Function omnispin spins the robot clockwise for a positive magnitude, and
@@ -295,7 +272,7 @@ void ospinturn(float direction, byte magnitude, float duration, bool brake,
 	*/
 	if (duration > 0)
 	{
-		Serial.println(String("\nIn ospinturn: \ndirection = " + String(direction) +
+		Serial.println(String("\nIn ospin: \ndirection = " + String(direction) +
 							  ", magnitude = " + String(magnitude) +
 							  ", duration = " + String(duration) +
 							  " and brake = " + String(brake)));

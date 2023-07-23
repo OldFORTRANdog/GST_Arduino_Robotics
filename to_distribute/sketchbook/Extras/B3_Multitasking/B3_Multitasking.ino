@@ -147,8 +147,8 @@ void setup(void) {
     // motorBack->run(FORWARD);
     odrive(-90, FORWARD_SPEED, BACKWARD_DURATION, true,
            motorLeft, motorRight, motorBack);
-    Serial.println("\nospinturn\n");
-    ospinturn(-90, FORWARD_SPEED, BACKWARD_DURATION, true,
+    Serial.println("\nospin\n");
+    ospin(-90, FORWARD_SPEED, BACKWARD_DURATION, true,
               motorLeft, motorRight, motorBack);
     while (1) {};
   } else {
@@ -220,7 +220,7 @@ void loop() {
   /* ========================= Check the sonar sensor ========================= */
   if (pingDist <= TARGET_DISTANCE_INCHES) {
     newDirection = map(maxAngle, 180, 0, -90, 90);
-    //  ospinturn(TURN_ANGLE, BACKWARD_SPEED, BACKWARD_DURATION, brake,
+    //  ospin(TURN_ANGLE, BACKWARD_SPEED, BACKWARD_DURATION, brake,
     //           motorLeft, motorRight, motorBack);
    Serial.println(String("Flow test: TOO close, " + String(pingDist)
                           + "inches, spin to " + String(newDirection)));
@@ -234,7 +234,7 @@ void loop() {
     Serial.println("Flow test: LEFT BUMP");
     odrive(180, -BACKWARD_SPEED, BACKWARD_DURATION, brake,
            motorLeft, motorRight, motorBack);
-    ospinturn(TURN_ANGLE, BACKWARD_SPEED, BACKWARD_DURATION, brake,
+    ospin(TURN_ANGLE, BACKWARD_SPEED, BACKWARD_DURATION, brake,
               motorLeft, motorRight, motorBack);
   }
 
