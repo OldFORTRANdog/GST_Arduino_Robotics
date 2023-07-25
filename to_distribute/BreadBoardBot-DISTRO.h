@@ -170,6 +170,7 @@ void pivot(float degrees, byte speed, Adafruit_DCMotor *mLeft, Adafruit_DCMotor 
 	mRight->run(RELEASE);
 	return;
 }
+
 /* ========================= Omniwheel/holonomic functions ========================= */
 
 float duration_per_angle(float angle, byte speed)
@@ -184,6 +185,8 @@ float duration_per_angle(float angle, byte speed)
 void odrive(float angle, byte magnitude, float duration, bool brake,
 			Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight, Adafruit_DCMotor *mBack)
 {
+	/* Without turning the robot, drive at given angle and magnitude for specified duration. */
+
 	// Define Trig onstants needed for mapping X,Y vectors to wheel coordinates
 	const float cos30_or_sin60 = sin((M_PI * 60) / 180.); // cos(30 deg) = sin(60 deg)
 	const float cos60_or_sin30 = 0.5; // cos(60 deg) = sin(30 deg)
@@ -268,8 +271,8 @@ void odrive(float angle, byte magnitude, float duration, bool brake,
 void ospin(float angle, byte magnitude, bool brake,
 		   Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight, Adafruit_DCMotor *mBack)
 {
-	/* Function omnispin spins the robot clockwise for a positive magnitude, and
-	counterclockwise for a negative magnitude.
+	/* Function omnispin spins the robot clockwise for a positive angle, and
+	counterclockwise for a negative angle.
 	*/
 	long duration = duration_per_angle(angle, magnitude);
 
@@ -326,8 +329,8 @@ void ospin(float angle, byte magnitude, bool brake,
 void otimedspin(float direction, byte magnitude, float duration, bool brake,
 				Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight, Adafruit_DCMotor *mBack)
 {
-	/* Function omnispin spins the robot clockwise for a positive magnitude, and
-	counterclockwise for a negative magnitude.
+	/* Function omnispin spins the robot clockwise for a positive direction, and
+	counterclockwise for a negative direction.
 	*/
 	if (duration > 0)
 	{
