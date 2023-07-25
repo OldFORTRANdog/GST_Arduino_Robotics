@@ -70,7 +70,7 @@ void loop(void) {
 
     // Loop for iterations at given power
     for (int i = 1; i <= 3; i++) {
-      ospin(direction, power, duration, brake,
+      otimedspin(direction, power, duration, brake,
             motorLeft, motorRight, motorBack);
       while (digitalRead(LEFT_BUMP_PIN)) {};
       while (!digitalRead(LEFT_BUMP_PIN)) {};

@@ -27,11 +27,11 @@ N.B.  All power/magnitudes are specified on scale 0-255, times used are all in m
 */
 const float trackWidth = 10.0; // DIstance between part of tire that is on the ground
 
-const float DISTANCE_SLOPE = 0.1992;		// From regression equation with data from DriveTest.ino
-const float DISTANCE_INTERCEPT = +3.014;    // Double check the sign!
+const float DISTANCE_SLOPE = 0.1992;	 // From regression equation with data from DriveTest.ino
+const float DISTANCE_INTERCEPT = +3.014; // Double check the sign!
 
-const float ANGLE_SLOPE = 0.1992;		// From regression equation with data from SpinTest.ino
-const float ANGLE_INTERCEPT = +3.014;   // Double check the sign!
+const float ANGLE_SLOPE = 0.1992;	  // From regression equation with data from SpinTest.ino
+const float ANGLE_INTERCEPT = +3.014; // Double check the sign!
 
 //===============================================================================
 
@@ -80,8 +80,8 @@ float duration_per_distance(float distance, byte speed)
 	/* Find drive time in milliseconds from relationship developed from
 	observations of distance/time for a speed.  */
 	float dist_per_sec = (DISTANCE_SLOPE * float(speed)) + DISTANCE_INTERCEPT; // in whatever units used, from data
-	float duration = abs(distance) / dist_per_sec;			 // needed time in sec
-	return duration * 1000.0;								 // Return in milliseconds
+	float duration = abs(distance) / dist_per_sec;							   // needed time in sec
+	return duration * 1000.0;												   // Return in milliseconds
 }
 
 void drive(float distance, byte speed, Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight)
@@ -170,52 +170,53 @@ void pivot(float degrees, byte speed, Adafruit_DCMotor *mLeft, Adafruit_DCMotor 
 	mRight->run(RELEASE);
 	return;
 }
-/* ========================= Omniwheel/holonomic functions ===================*/
+/* ========================= Omniwheel/holonomic functions ========================= */
 
 float duration_per_angle(float angle, byte speed)
 {
 	/* Find drive time in milliseconds from relationship developed from
 	observations of angle/time for a speed.  */
 	float degree_per_sec = (ANGLE_SLOPE * float(speed)) + ANGLE_INTERCEPT; // in whatever units used, from data
-	float duration = abs(angle) / degree_per_sec;			 // needed time in sec
-	return duration * 1000.0;								 // Return in milliseconds
+	float duration = abs(angle) / degree_per_sec;						   // needed time in sec
+	return duration * 1000.0;											   // Return in milliseconds
 }
 
-void odrive(float direction, byte magnitude, long duration, bool brake,
+void odrive(float angle, byte magnitude, float duration, bool brake,
 			Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight, Adafruit_DCMotor *mBack)
 {
-	// Define Constants
-	const float cos30sin60 = sqrt(3.0) / 2.0; // cos(30 deg) = sin(60 deg), need for wheel
+	// Define Trig onstants needed for mapping X,Y vectors to wheel coordinates
+	const float cos30_or_sin60 = sin((M_PI * 60) / 180.); // cos(30 deg) = sin(60 deg)
+	const float cos60_or_sin30 = 0.5; // cos(60 deg) = sin(30 deg)
+
 	if (duration > 0)
 	{
-		Serial.println(String("\nIn odrive: \ndirection = " + String(direction) +
+		Serial.println(String("\nIn odrive: \nangle = " + String(angle) +
 							  ", magnitude = " + String(magnitude) +
 							  ", duration = " + String(duration) +
 							  " and brake = " + String(brake)));
 
-		float xVector = magnitude * sin((M_PI * direction) / 180.);
-		float yVector = magnitude * cos((M_PI * direction) / 180.);
-		Serial.print("xVector, yVector = ");
-		Serial.print(xVector);
-		Serial.print(", ");
-		Serial.println(yVector);
+		float xVector = magnitude * sin((M_PI * angle) / 180.);
+		float yVector = magnitude * cos((M_PI * angle) / 180.);
+		Serial.println(String("xVector, yVector = " + String(xVector) +
+							  ", " + String(yVector)));
 
 		// Find relative power needed for each wheel based on the target velocity vector
 		/* N.B.: When back motor is mounted in standard position (with wires towards inside
 			of chassis and connected to Motor connection 2), then its FORWARD direction
-			is to the left, the opposite of our convention.  Therefore, the xVector needs a
-			negative sign in front of it to correct the directionality.
+			is to the left, the opposite of our convention.  Therefore, all the xVector 
+			components need a negative sign in front of them to correct the directionality.
 			*/
 		float backPower = -xVector; // Multiply by fudge factor to prevent rotation if needed
-		float leftPower = -0.5 * xVector - cos30sin60 * yVector;
-		float rightPower = -0.5 * xVector + cos30sin60 * yVector;
+		float leftPower = -(cos60_or_sin30 * xVector) - (cos30_or_sin60 * yVector);
+		float rightPower = -(cos60_or_sin30 * xVector) + (cos30_or_sin60 * yVector);
 		Serial.println(String("backpower, leftpower, rightpower = " +
 							  String(backPower) + ", " + String(leftPower) + ", " +
 							  String(rightPower)));
+
 		// Find the actual motor speeds, 0-255, needed.  N.B. still need motor direction!
-		byte backSpeed = map(abs(backPower), 0, 255, 0, 255);
-		byte leftSpeed = map(abs(leftPower), 0, 255, 0, 255);
-		byte rightSpeed = map(abs(rightPower), 0, 255, 0, 255);
+		byte backSpeed = abs(backPower);
+		byte leftSpeed =abs(leftPower);
+		byte rightSpeed = abs(rightPower);
 
 		// Set the speeds
 		mBack->setSpeed(backSpeed);
@@ -264,15 +265,17 @@ void odrive(float direction, byte magnitude, long duration, bool brake,
 	}
 }
 
-void ospin(float direction, byte magnitude, float duration, bool brake,
-			   Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight, Adafruit_DCMotor *mBack)
+void ospin(float angle, byte magnitude, bool brake,
+		   Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight, Adafruit_DCMotor *mBack)
 {
 	/* Function omnispin spins the robot clockwise for a positive magnitude, and
 	counterclockwise for a negative magnitude.
 	*/
+	long duration = duration_per_angle(angle, magnitude);
+
 	if (duration > 0)
 	{
-		Serial.println(String("\nIn ospin: \ndirection = " + String(direction) +
+		Serial.println(String("\nIn ospin: \nangle = " + String(angle) +
 							  ", magnitude = " + String(magnitude) +
 							  ", duration = " + String(duration) +
 							  " and brake = " + String(brake)));
@@ -287,9 +290,9 @@ void ospin(float direction, byte magnitude, float duration, bool brake,
 		mRight->setSpeed(rightSpeed);
 
 		// We can use a trinary operator to set direction within run call
-		mLeft->run((direction > 0) ? FORWARD : BACKWARD);
-		mRight->run((direction > 0) ? BACKWARD : FORWARD);
-		mBack->run((direction > 0) ? FORWARD : BACKWARD);
+		mLeft->run((angle > 0) ? BACKWARD : FORWARD);
+		mRight->run((angle > 0) ? FORWARD : BACKWARD);
+		mBack->run((angle > 0) ? BACKWARD : FORWARD);
 
 		// Print out motor control details
 		Serial.print("Speeds Back,Left,Right = ");
@@ -297,16 +300,16 @@ void ospin(float direction, byte magnitude, float duration, bool brake,
 
 		// Run motors for the duration needed, duration is in milliseconds
 		delay(duration);
+		if (brake)
+		{ // Not a real brake, but set power = 0, stop driving motors
+			mBack->setSpeed(0);
+			mLeft->setSpeed(0);
+			mRight->setSpeed(0);
+			mBack->run(RELEASE);
+			mLeft->run(RELEASE);
+			mRight->run(RELEASE);
+		}
 	} // end of duration > 0
-	if (brake)
-	{ // Not a real brake, but set power = 0, stop driving motors
-		mBack->setSpeed(0);
-		mLeft->setSpeed(0);
-		mRight->setSpeed(0);
-		mBack->run(RELEASE);
-		mLeft->run(RELEASE);
-		mRight->run(RELEASE);
-	}
 	else
 	{						// no duration entered, so stop all motors
 		mBack->setSpeed(0); // set all speeds to 0 and

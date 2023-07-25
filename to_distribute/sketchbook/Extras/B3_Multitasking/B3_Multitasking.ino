@@ -148,7 +148,7 @@ void setup(void) {
     odrive(-90, FORWARD_SPEED, BACKWARD_DURATION, true,
            motorLeft, motorRight, motorBack);
     Serial.println("\nospin\n");
-    ospin(-90, FORWARD_SPEED, BACKWARD_DURATION, true,
+    ospin(-90, FORWARD_SPEED, true,
               motorLeft, motorRight, motorBack);
     while (1) {};
   } else {
@@ -234,7 +234,7 @@ void loop() {
     Serial.println("Flow test: LEFT BUMP");
     odrive(180, -BACKWARD_SPEED, BACKWARD_DURATION, brake,
            motorLeft, motorRight, motorBack);
-    ospin(TURN_ANGLE, BACKWARD_SPEED, BACKWARD_DURATION, brake,
+    ospin(TURN_ANGLE, BACKWARD_SPEED, brake,
               motorLeft, motorRight, motorBack);
   }
 
