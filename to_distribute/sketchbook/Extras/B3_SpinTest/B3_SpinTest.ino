@@ -64,7 +64,7 @@ void loop(void) {
   /* Autonomous loop for driving in a square */
   duration = 1000;  //  One second at each angle
   brake = true;     //  No braking
-  direction = +90;
+  direction = +1;
   // Loop for power
   for (int power = 50; power <= 250; power += 50) {
 
@@ -81,4 +81,13 @@ void loop(void) {
     while (!digitalRead(RIGHT_BUMP_PIN)) {};
     delay(600);  // Bump pin triggered and released, just give 0.6 seconds to get hands out of the way.
   }
+
+    // Loop for iterations at given power
+    for (int i = 1; i <= 3; i++) {
+      otimedspin(direction, 255, duration, brake,
+            motorLeft, motorRight, motorBack);
+      while (digitalRead(LEFT_BUMP_PIN)) {};
+      while (!digitalRead(LEFT_BUMP_PIN)) {};
+      delay(600);  // Bump pin triggered and released, just give 0.6 seconds to get hands out of the way.
+    }
 }
