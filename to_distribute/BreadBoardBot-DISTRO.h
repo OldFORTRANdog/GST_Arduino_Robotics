@@ -23,15 +23,31 @@ N.B.  All power/magnitudes are specified on scale 0-255, times used are all in m
 //=================================================================================
 /* The units here determine units used everywhere for distance!
    Use either inches or centimeters, but remember that all subsequent calls to
-   BreadBoardBot.h functions that use distanc will be in those units.
+   BreadBoardBot.h functions that use distance will be in those units.
 */
-const float trackWidth = 10.0; // DIstance between part of tire that is on the ground
 
+#ifndef OMNI
+const float trackWidth = 10.0;			 // DIstance between part of tire that is on the ground
 const float DISTANCE_SLOPE = 0.1992;	 // From regression equation with data from DriveTest.ino
 const float DISTANCE_INTERCEPT = +3.014; // Double check the sign!
+#else
+/* If using robot with wheels in omnidrive position, but want to only use the front wheels for
+	driving, i.e., use drive and spin instead of odrive and spin, define OMNI at beginning of program
+	to use distance parameters from omnidrive calibration runs og drivetest.
+*/
+const float trackWidth = 10.0;			 // DIstance between part of tire that is on the ground
+const float DISTANCE_SLOPE = 0.1992;	 // From regression equation with data from DriveTest.ino
+const float DISTANCE_INTERCEPT = +3.014; // Double check the sign!
+#endif
 
-const float ANGLE_SLOPE = 0.1992;	  // From regression equation with data from SpinTest.ino
-const float ANGLE_INTERCEPT = +3.014; // Double check the sign!
+const float NEG_ANGLE_SLOPE = 1.5994;	   // From regression equation with data from SpinTest.ino
+const float NEG_ANGLE_INTERCEPT = -19.2868; // Double check the sign!
+
+const float POS_ANGLE_SLOPE = 1.6018;	   // From regression equation with data from SpinTest.ino
+const float POS_ANGLE_INTERCEPT = -19.6951; // Double check the sign!
+
+// const float NEG_ANGLE_SLOPE, POS_ANGLE_SLOPE = 1.6009;	   // From regression equation with data from SpinTest.ino
+// const float NEG_ANGLE_INTERCEPT, POS_ANGLE_INTERCEPT = -19.491; // Double check the sign!
 
 //===============================================================================
 
@@ -170,26 +186,24 @@ void pivot(float degrees, byte speed, Adafruit_DCMotor *mLeft, Adafruit_DCMotor 
 	mRight->run(RELEASE);
 	return;
 }
-
 /* ========================= Omniwheel/holonomic functions ========================= */
 
 float duration_per_angle(float angle, byte speed)
 {
 	/* Find drive time in milliseconds from relationship developed from
 	observations of angle/time for a speed.  */
-	float degree_per_sec = (ANGLE_SLOPE * float(speed)) + ANGLE_INTERCEPT; // in whatever units used, from data
-	float duration = abs(angle) / degree_per_sec;						   // needed time in sec
-	return duration * 1000.0;											   // Return in milliseconds
+	float degree_per_sec = ((angle >= 0, POS_ANGLE_SLOPE, NEG_ANGLE_SLOPE) * float(speed)) +
+						   (angle >= 0, POS_ANGLE_INTERCEPT, NEG_ANGLE_INTERCEPT); // in whatever units used, from data
+	float duration = abs(angle) / degree_per_sec;								   // needed time in sec
+	return duration * 1000.0;													   // Return in milliseconds
 }
 
 void odrive(float angle, byte magnitude, float duration, bool brake,
 			Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight, Adafruit_DCMotor *mBack)
 {
-	/* Without turning the robot, drive at given angle and magnitude for specified duration. */
-
 	// Define Trig onstants needed for mapping X,Y vectors to wheel coordinates
 	const float cos30_or_sin60 = sin((M_PI * 60) / 180.); // cos(30 deg) = sin(60 deg)
-	const float cos60_or_sin30 = 0.5; // cos(60 deg) = sin(30 deg)
+	const float cos60_or_sin30 = 0.5;					  // cos(60 deg) = sin(30 deg)
 
 	if (duration > 0)
 	{
@@ -206,7 +220,7 @@ void odrive(float angle, byte magnitude, float duration, bool brake,
 		// Find relative power needed for each wheel based on the target velocity vector
 		/* N.B.: When back motor is mounted in standard position (with wires towards inside
 			of chassis and connected to Motor connection 2), then its FORWARD direction
-			is to the left, the opposite of our convention.  Therefore, all the xVector 
+			is to the left, the opposite of our convention.  Therefore, all the xVector
 			components need a negative sign in front of them to correct the directionality.
 			*/
 		float backPower = -xVector; // Multiply by fudge factor to prevent rotation if needed
@@ -218,7 +232,7 @@ void odrive(float angle, byte magnitude, float duration, bool brake,
 
 		// Find the actual motor speeds, 0-255, needed.  N.B. still need motor direction!
 		byte backSpeed = abs(backPower);
-		byte leftSpeed =abs(leftPower);
+		byte leftSpeed = abs(leftPower);
 		byte rightSpeed = abs(rightPower);
 
 		// Set the speeds
@@ -268,22 +282,22 @@ void odrive(float angle, byte magnitude, float duration, bool brake,
 	}
 }
 
-void ospin(float angle, byte magnitude, bool brake,
+void ospin(float angle, byte speed, bool brake,
 		   Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight, Adafruit_DCMotor *mBack)
 {
 	/* Function omnispin spins the robot clockwise for a positive angle, and
 	counterclockwise for a negative angle.
 	*/
-	long duration = duration_per_angle(angle, magnitude);
+	long duration = duration_per_angle(angle, speed);
 
 	if (duration > 0)
 	{
 		Serial.println(String("\nIn ospin: \nangle = " + String(angle) +
-							  ", magnitude = " + String(magnitude) +
+							  ", speed = " + String(speed) +
 							  ", duration = " + String(duration) +
 							  " and brake = " + String(brake)));
 
-		byte backSpeed = abs(magnitude);
+		byte backSpeed = abs(speed);
 		byte leftSpeed = backSpeed;
 		byte rightSpeed = backSpeed;
 
@@ -326,7 +340,7 @@ void ospin(float angle, byte magnitude, bool brake,
 	}
 }
 
-void otimedspin(float direction, byte magnitude, float duration, bool brake,
+void otimedspin(float direction, byte speed, float duration, bool brake,
 				Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight, Adafruit_DCMotor *mBack)
 {
 	/* Function omnispin spins the robot clockwise for a positive direction, and
@@ -334,14 +348,12 @@ void otimedspin(float direction, byte magnitude, float duration, bool brake,
 	*/
 	if (duration > 0)
 	{
-		Serial.print("direction = ");
-		Serial.print(direction);
-		Serial.print(", magnitude = ");
-		Serial.print(magnitude);
-		Serial.print(" and duration = ");
-		Serial.println(duration);
+		Serial.println(String("\nIn otimedspin: \ndirection = " + String(direction) +
+							  ", speed = " + String(speed) +
+							  ", duration = " + String(duration) +
+							  " and brake = " + String(brake)));
 
-		byte backSpeed = abs(magnitude);
+		byte backSpeed = abs(speed);
 		byte leftSpeed = backSpeed;
 		byte rightSpeed = backSpeed;
 
@@ -351,9 +363,9 @@ void otimedspin(float direction, byte magnitude, float duration, bool brake,
 		mRight->setSpeed(rightSpeed);
 
 		// We can use a trinary operator to set direction within run call
-		mBack->run((direction > 0) ? FORWARD : BACKWARD);
 		mLeft->run((direction > 0) ? FORWARD : BACKWARD);
 		mRight->run((direction > 0) ? BACKWARD : FORWARD);
+		mBack->run((direction > 0) ? FORWARD : BACKWARD);
 
 		// Print out motor control details
 		Serial.print("Speeds Back,Left,Right = ");
