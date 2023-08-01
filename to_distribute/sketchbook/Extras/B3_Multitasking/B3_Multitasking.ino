@@ -239,7 +239,7 @@ void loop() {
   /* ========================= check the left sensor: ========================= */
   if (!digitalRead(LEFT_BUMP_PIN)) {  // the LEFT side switch was bumped
     Serial.println("Flow test: LEFT BUMP");
-    odrive(180, -BACKWARD_SPEED, BACKWARD_DURATION, brake,
+    odrive(180, BACKWARD_SPEED, BACKWARD_DURATION, brake,
            motorLeft, motorRight, motorBack);
     ospin(TURN_ANGLE, BACKWARD_SPEED, brake,
           motorLeft, motorRight, motorBack);
