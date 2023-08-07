@@ -29,8 +29,8 @@ const int LEDPIN = LED_BUILTIN;  // the number of the LED pin
 
 const byte LEFT_BUMP_PIN = 53;   // Define DIGITAL Pins for left
 const byte RIGHT_BUMP_PIN = 52;  // and right bump sensors
-const byte SONIC_TRIGGER_PIN = 39;
-const byte SONIC_ECHO_PIN = 38;
+const byte SONIC_TRIGGER_PIN = 41;
+const byte SONIC_ECHO_PIN = 40;
 
 // Parameters controlling program behavior
 // Bump behavior
