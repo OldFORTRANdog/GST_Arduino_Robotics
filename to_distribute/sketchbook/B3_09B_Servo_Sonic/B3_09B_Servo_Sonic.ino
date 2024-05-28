@@ -41,7 +41,7 @@
 #include <NewPing.h>  // Another new library, this one to use the sonic sensor
 
 // Option to change sonar behavior
-// #define NO_ECHO 500   // Changes value used in NewPing library when there is no sonar return.
+#define NO_ECHO 500   // Changes value used in NewPing library when there is no sonar return.
 
 
 // Create the motor shield object with the default I2C address
