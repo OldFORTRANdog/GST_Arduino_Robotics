@@ -29,8 +29,8 @@ const int LEDPIN = LED_BUILTIN;  // the number of the LED pin
 
 const byte LEFT_BUMP_PIN = 53;   // Define DIGITAL Pins for left
 const byte RIGHT_BUMP_PIN = 52;  // and right bump sensors
-const byte SONIC_TRIGGER_PIN = 39;
-const byte SONIC_ECHO_PIN = 38;
+const byte SONIC_TRIGGER_PIN = 41;
+const byte SONIC_ECHO_PIN = 40;
 
 // Parameters controlling program behavior
 // Bump behavior
@@ -239,7 +239,7 @@ void loop() {
   /* ========================= check the left sensor: ========================= */
   if (!digitalRead(LEFT_BUMP_PIN)) {  // the LEFT side switch was bumped
     Serial.println("Flow test: LEFT BUMP");
-    odrive(180, -BACKWARD_SPEED, BACKWARD_DURATION, brake,
+    odrive(180, BACKWARD_SPEED, BACKWARD_DURATION, brake,
            motorLeft, motorRight, motorBack);
     ospin(TURN_ANGLE, BACKWARD_SPEED, brake,
           motorLeft, motorRight, motorBack);
