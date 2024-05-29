@@ -41,7 +41,7 @@
 #include <NewPing.h>  // Another new library, this one to use the sonic sensor
 
 // Option to change sonar behavior
-// #define NO_ECHO 500   // Changes value used in NewPing library when there is no sonar return.
+#define NO_ECHO 500   // Changes value used in NewPing library when there is no sonar return.
 
 
 // Create the motor shield object with the default I2C address
@@ -56,8 +56,8 @@ Servo panServo;
 // IO Pins used
 const byte LEFT_BUMP_PIN = 53;   // Define DIGITAL Pins for left
 const byte RIGHT_BUMP_PIN = 52;  // and right bump sensors
-const byte SONIC_TRIGGER_PIN = 39;
-const byte SONIC_ECHO_PIN = 38;
+const byte SONIC_TRIGGER_PIN = 41;
+const byte SONIC_ECHO_PIN = 40;
 
 // Parameters controlling program behavior
 // Bump behavior
