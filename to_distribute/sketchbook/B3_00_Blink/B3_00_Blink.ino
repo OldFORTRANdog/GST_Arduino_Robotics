@@ -20,7 +20,8 @@
   by Colby Newman
 
   modified 12 Mar 2021
-  by Dave Eslinger: Just a name change for GoSciTech robotics camp.
+  by Dave Eslinger: Name change for GoSciTech robotics camp
+                    and a second delay for long-short blinking.
 */
 
 
