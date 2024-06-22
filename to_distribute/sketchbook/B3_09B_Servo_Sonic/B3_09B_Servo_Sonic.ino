@@ -41,7 +41,7 @@
 #include <NewPing.h>  // Another new library, this one to use the sonic sensor
 
 // Option to change sonar behavior
-#define NO_ECHO 500   // Changes value used in NewPing library when there is no sonar return.
+// #define NO_ECHO 500   // Changes value used in NewPing library when there is no sonar return.
 
 
 // Create the motor shield object with the default I2C address
@@ -81,8 +81,8 @@ Adafruit_DCMotor *motorRight = AFMS.getMotor(RIGHT_MOTOR_PORT);
 NewPing sonic(SONIC_TRIGGER_PIN, SONIC_ECHO_PIN, MAX_SONIC_DISTANCE);
 
 /* Define servo pins */
-const byte PANSERVOPIN = 9;  // Servo 1 on AdaFruit Motor Shield
-//const byte TILTSERVOPIN = 9; // Servo 2
+const byte PANSERVOPIN = 10;  // Arduino pint 10 is used for Servo 1 on AdaFruit Motor Shield
+//const byte TILTSERVOPIN = 9; // Arduino pint 9 is used for Servo 2
 
 float pingDist;  // define variable to use for distance measurements
 
