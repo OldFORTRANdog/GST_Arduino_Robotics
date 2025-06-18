@@ -49,12 +49,20 @@ const float POS_ANGLE_INTERCEPT = -19.6951; // Double check the sign!
 // const float NEG_ANGLE_SLOPE, POS_ANGLE_SLOPE = 1.6009;	   // From regression equation with data from SpinTest.ino
 // const float NEG_ANGLE_INTERCEPT, POS_ANGLE_INTERCEPT = -19.491; // Double check the sign!
 
+
+/* If robot drifts consistantly to one side, REDUCE the X_ADJUST value for the opposite wheel slightly. 
+   Tune until happy with straightline driving.    
+
+*/
+const float L_ADJUST = 1.0;
+const float R_ADJUST = 1.0;
+
 //===============================================================================
 
 void allStop(int oldDirection, Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight)
 {
-	mLeft->setSpeed(50);  // Note that we reset the speeds here; therefore,
-	mRight->setSpeed(50); // we need to reset them in other routine.
+	mLeft->setSpeed(L_ADJUST * 50);  // Note that we reset the speeds here; therefore,
+	mRight->setSpeed(R_ADJUST * 50); // we need to reset them in other routine.
 	if (oldDirection == FORWARD)
 	{
 		mLeft->run(BACKWARD);
@@ -73,8 +81,8 @@ void allStop(int oldDirection, Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight
 
 void spinStop(int angle, Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight)
 {
-	mLeft->setSpeed(50);  // Note that we reset the speeds here; therefore,
-	mRight->setSpeed(50); // we need to reset them in other routine.
+	mLeft->setSpeed(L_ADJUST * 50);  // Note that we reset the speeds here; therefore,
+	mRight->setSpeed(R_ADJUST * 50); // we need to reset them in other routine.
 	if (angle > 0)
 	{
 		mLeft->run(BACKWARD);
@@ -103,8 +111,8 @@ float duration_per_distance(float distance, byte speed)
 void drive(float distance, byte speed, Adafruit_DCMotor *mLeft, Adafruit_DCMotor *mRight)
 {
 	byte direction;
-	mLeft->setSpeed(speed); // Set both speeds
-	mRight->setSpeed(speed);
+	mLeft->setSpeed(L_ADJUST * speed); // Set both speeds
+	mRight->setSpeed(R_ADJUST * speed);
 
 	if (distance > 0)
 	{ // Postive distance is forward
@@ -135,8 +143,8 @@ void spin(float degrees, byte speed, Adafruit_DCMotor *mLeft, Adafruit_DCMotor *
 	// float distance = PI * trackWidth * degrees / 360.;
 	float distance = PI * trackWidth * degrees / 360.;
 	float duration = duration_per_distance(distance, speed);
-	mLeft->setSpeed(speed); // Set both speeds
-	mRight->setSpeed(speed);
+	mLeft->setSpeed(L_ADJUST * speed); // Set both speeds
+	mRight->setSpeed(R_ADJUST * speed);
 	if (degrees > 0)
 	{
 		/* Positive angle is spin turn to the right; therefore right motor goes
@@ -166,8 +174,8 @@ void pivot(float degrees, byte speed, Adafruit_DCMotor *mLeft, Adafruit_DCMotor 
 	circle needed, given by the ratio degrees/360. */
 	float distance = 2.0 * PI * trackWidth * degrees / 360.;
 	float duration = duration_per_distance(distance, speed);
-	mLeft->setSpeed(speed); // Set both speeds
-	mRight->setSpeed(speed);
+	mLeft->setSpeed(L_ADJUST * speed); // Set both speeds
+	mRight->setSpeed(R_ADJUST * speed);
 	if (degrees > 0)
 	{
 		/*		Positive angle is spin turn to the right; therefore right motor
